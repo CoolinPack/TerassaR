@@ -523,7 +523,7 @@
 
     <div class="container">
 
-        <!-- ЭКРАН 1: ГЛАВНАЯ (приветственный текст удален) -->
+        <!-- ЭКРАН 1: ГЛАВНАЯ -->
         <div id="screen-home" class="screen active">
             <div class="hero-header">
                 <div class="hero-content">
@@ -574,7 +574,6 @@
                 <input type="text" id="searchInput" placeholder="Быстрый поиск блюд и напитков..." oninput="renderMenu()">
             </div>
 
-            <!-- Добавлена надпись категорий под поисковиком -->
             <div class="categories-header-title">Категории блюд и напитков</div>
 
             <div class="custom-dropdown-wrapper">
@@ -623,7 +622,7 @@
             </div>
         </div>
 
-        <!-- ЭКРАН 4: ПРОФИЛЬ (Админка доступна только владельцу с ID 1393803372) -->
+        <!-- ЭКРАН 4: ПРОФИЛЬ -->
         <div id="screen-profile" class="screen">
             <div class="profile-card">
                 <div class="avatar-circle" id="profileInitial">А</div>
@@ -864,7 +863,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (tg && tg.expand) tg.expand();
             
-            // Проверка Telegram ID для доступа к админке (ваш ID: 1393803372)
             if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
                 const userId = tg.initDataUnsafe.user.id;
                 if (userId === 1393803372) {
@@ -873,7 +871,6 @@
                 }
             }
 
-            // Загрузка истории заказов навсегда (из localStorage)
             const savedHistory = localStorage.getItem('terassa_order_history');
             if (savedHistory) {
                 try { orderHistory = JSON.parse(savedHistory); } catch(e) {}
@@ -1200,7 +1197,11 @@
             let addressInput = document.getElementById('deliveryAddress');
             let address = currentOrderType === 'delivery' && addressInput ? addressInput.value : 'Самовывоз из ресторана';
             
-            const newOrderId = Math.floor(100 + Math.random() * 900);
+            // Строго последовательная нумерация заказов (1, 2, 3, 4 и т.д.)
+            let lastOrderSeq = parseInt(localStorage.getItem('terassa_last_seq') || '0', 10);
+            let newOrderId = lastOrderSeq + 1;
+            localStorage.setItem('terassa_last_seq', newOrderId);
+
             const now = new Date();
             const dateStr = now.toLocaleDateString('ru-RU') + ', ' + now.toLocaleTimeString('ru-RU');
 
