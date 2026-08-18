@@ -23,16 +23,15 @@
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            padding-bottom: 95px;
+            padding-bottom: 110px;
         }
 
         .container { padding: 16px; max-width: 600px; margin: 0 auto; }
 
-        /* Экраны */
         .screen { display: none; }
         .screen.active { display: block; }
 
-        /* Модальное окно регистрации при первом входе */
+        /* Модальное окно регистрации (1 раз) */
         .onboarding-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -65,9 +64,7 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        .form-group {
-            margin-bottom: 14px;
-        }
+        .form-group { margin-bottom: 14px; }
         .form-group label {
             display: block;
             font-size: 12px;
@@ -75,7 +72,6 @@
             color: var(--text-muted);
             margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         .form-group input, .form-group select {
             width: 100%;
@@ -89,7 +85,7 @@
             color: var(--text-main);
         }
 
-        /* Шапка с фоновым изображением через CSS */
+        /* Шапка с фоном */
         .hero-header {
             position: relative;
             border-radius: 20px;
@@ -103,15 +99,11 @@
             background-size: cover;
             background-position: center;
         }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
+        .hero-content { position: relative; z-index: 2; }
         .hero-header h1 {
             margin: 0;
             font-size: 32px;
             font-weight: 800;
-            letter-spacing: -0.5px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
         .hero-header p {
@@ -130,7 +122,6 @@
             color: #1a1a1a;
         }
 
-        /* Кликабельные табы на главной */
         .promo-slider {
             display: flex;
             gap: 10px;
@@ -146,18 +137,11 @@
             text-align: center;
             font-weight: 700;
             font-size: 14px;
-            border: 1px solid rgba(0,0,0,0.03);
             cursor: pointer;
-            transition: transform 0.1s;
+            border: 1px solid rgba(0,0,0,0.03);
         }
-        .promo-card:active { transform: scale(0.97); }
 
-        /* Карточки популярных блюд */
-        .popular-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .popular-list { display: flex; flex-direction: column; gap: 10px; }
         .popular-card {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -168,14 +152,11 @@
             align-items: center;
             cursor: pointer;
         }
-        .popular-info h5 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: var(--text-main); }
-        .popular-info .price { font-size: 14px; color: var(--text-main); font-weight: 700; }
+        .popular-info h5 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; }
+        .popular-info .price { font-size: 14px; font-weight: 700; }
         .popular-arrow { font-size: 18px; color: #b5835a; }
 
-        /* Поисковик в меню */
-        .search-box {
-            margin-bottom: 14px;
-        }
+        .search-box { margin-bottom: 14px; }
         .search-box input {
             width: 100%;
             padding: 14px 16px;
@@ -187,11 +168,8 @@
             outline: none;
         }
 
-        /* Кастомный объемный выпадающий список */
-        .custom-dropdown-wrapper {
-            position: relative;
-            margin-bottom: 16px;
-        }
+        /* Выпадающий список категорий */
+        .custom-dropdown-wrapper { position: relative; margin-bottom: 16px; }
         .dropdown-toggle-btn {
             width: 100%;
             padding: 16px 20px;
@@ -200,23 +178,17 @@
             border-radius: 24px;
             font-size: 16px;
             font-weight: 700;
-            color: var(--text-main);
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 8px 25px rgba(92, 44, 22, 0.08), inset 0 1px 0 rgba(255,255,255,0.9);
-            transition: all 0.2s ease;
+            box-shadow: 0 8px 25px rgba(92, 44, 22, 0.08);
             box-sizing: border-box;
-        }
-        .dropdown-toggle-btn:hover {
-            box-shadow: 0 10px 30px rgba(92, 44, 22, 0.12), inset 0 1px 0 rgba(255,255,255,0.9);
         }
         .dropdown-menu-list {
             position: absolute;
             top: calc(100% + 8px);
-            left: 0;
-            width: 100%;
+            left: 0; width: 100%;
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 12px 35px rgba(0,0,0,0.12);
@@ -228,28 +200,17 @@
             padding: 8px;
             box-sizing: border-box;
         }
-        .dropdown-menu-list.open {
-            display: block;
-        }
+        .dropdown-menu-list.open { display: block; }
         .dropdown-item {
             padding: 12px 16px;
             font-size: 15px;
             font-weight: 600;
-            color: var(--text-main);
             border-radius: 12px;
             cursor: pointer;
-            transition: background 0.15s, color 0.15s;
         }
-        .dropdown-item:hover {
-            background: #f7f2ec;
-            color: #5c2c16;
-        }
-        .dropdown-item.selected {
-            background: #5c2c16;
-            color: #ffffff;
-        }
+        .dropdown-item:hover { background: #f7f2ec; color: #5c2c16; }
+        .dropdown-item.selected { background: #5c2c16; color: #ffffff; }
 
-        /* Карточки блюд в меню */
         .menu-list { display: flex; flex-direction: column; gap: 10px; }
         .food-card {
             background: var(--card-bg);
@@ -260,13 +221,10 @@
             flex-direction: column;
             gap: 12px;
         }
-        .food-card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
+        .food-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
         .food-details { flex: 1; padding-right: 10px; }
-        .food-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .food-title { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+        .food-category-label { font-size: 11px; color: #b5835a; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; }
         
         .ingredients-toggle-btn {
             background: #f5efe9;
@@ -277,31 +235,21 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 6px;
-            display: inline-block;
-            user-select: none;
-            transition: background 0.15s;
+            margin-top: 4px;
         }
-        .ingredients-toggle-btn:hover { background: #ebdcd0; }
         .ingredients-box {
             font-size: 13px;
             color: var(--text-muted);
             background: #faf8f5;
             padding: 10px;
             border-radius: 10px;
-            margin-top: 4px;
             display: none;
+            margin-top: 4px;
         }
         .ingredients-box.open { display: block; }
 
-        .food-right-column {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 8px;
-        }
-        .food-price { font-size: 15px; font-weight: 700; color: var(--text-main); }
+        .food-right-column { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 8px; }
+        .food-price { font-size: 15px; font-weight: 700; }
 
         .counter-controls {
             display: flex;
@@ -323,13 +271,38 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            color: var(--text-main);
         }
         .counter-btn.plus { background: #5c2c16; color: white; }
         .counter-value { font-size: 14px; font-weight: 700; min-width: 14px; text-align: center; }
 
-        /* Корзина */
+        /* Стоп лист бейджики */
+        .stop-badge {
+            background: #e74c3c;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+        .admin-stop-btn {
+            background: #fadbd8;
+            color: #c0392b;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .admin-stop-btn.in-stop {
+            background: #d4efdf;
+            color: #27ae60;
+        }
+
+        /* Корзина и Оформление */
         .cart-summary-box {
             background: white;
             border-radius: var(--radius);
@@ -347,12 +320,7 @@
             border-bottom: 1px dashed #e2dacd;
             padding-bottom: 12px;
         }
-        
-        .order-type-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+        .order-type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
         .order-type-btn {
             flex: 1;
             background: white;
@@ -360,18 +328,11 @@
             padding: 12px;
             font-size: 14px;
             font-weight: 700;
-            color: var(--text-main);
             border-radius: 12px;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
         }
-        .order-type-btn.active {
-            background: #5c2c16;
-            color: white;
-            border-color: #5c2c16;
-            box-shadow: 0 4px 10px rgba(92, 44, 22, 0.2);
-        }
+        .order-type-btn.active { background: #5c2c16; color: white; border-color: #5c2c16; }
 
         .btn-main {
             background: #5c2c16;
@@ -384,9 +345,7 @@
             cursor: pointer;
             width: 100%;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(92, 44, 22, 0.2);
         }
-
         .btn-geo {
             background: #f5efe9;
             color: #7a4328;
@@ -402,9 +361,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: background 0.15s;
         }
-        .btn-geo:hover { background: #ebdcd0; }
 
         /* Профиль */
         .profile-card {
@@ -416,30 +373,23 @@
             margin-bottom: 15px;
         }
         .avatar-circle {
-            width: 70px;
-            height: 70px;
-            background: #5c2c16;
-            color: white;
+            width: 70px; height: 70px;
+            background: #5c2c16; color: white;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; font-weight: bold;
             margin: 0 auto 12px auto;
         }
         .profile-info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0ece1;
+            display: flex; justify-content: space-between;
+            padding: 10px 0; border-bottom: 1px solid #f0ece1;
             font-size: 14px;
         }
         .profile-info-row:last-child { border-bottom: none; }
         .profile-label { color: var(--text-muted); }
         .profile-val { font-weight: 600; }
 
-        /* История заказов */
+        /* История заказов со статусами */
         .order-history-card {
             background: white;
             border-radius: var(--radius);
@@ -447,36 +397,33 @@
             box-shadow: var(--shadow);
             margin-bottom: 10px;
         }
-        .order-card-header {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 800;
-            font-size: 15px;
-            margin-bottom: 4px;
-        }
+        .order-card-header { display: flex; justify-content: space-between; font-weight: 800; font-size: 15px; margin-bottom: 4px; }
         .order-card-date { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
         .order-card-items { font-size: 13px; color: #444; }
-        .badge-new {
-            background: #eef2f7;
-            color: #3182ce;
-            padding: 2px 8px;
+        
+        .badge-status {
+            padding: 3px 8px;
             border-radius: 6px;
             font-size: 11px;
             font-weight: 700;
         }
+        .status-new { background: #eef2f7; color: #3182ce; }
+        .status-cooking { background: #fef3c7; color: #d97706; }
+        .status-ready { background: #d4efdf; color: #27ae60; }
 
-        /* Нижняя навигация */
+        /* Нижняя навигация (Приподнятая, скругленная, утолщенная) */
         nav {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
             background: #ffffff;
             display: flex;
             justify-content: space-around;
-            padding: 10px 8px;
-            border-top: 1px solid #eae3d9;
-            box-shadow: 0 -6px 25px rgba(0,0,0,0.06);
+            padding: 10px 6px;
+            border-radius: 24px;
+            border: 1px solid #eae3d9;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             z-index: 100;
             box-sizing: border-box;
         }
@@ -484,9 +431,9 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            font-size: 13px;
-            padding: 8px 12px;
-            border-radius: 14px;
+            font-size: 12px;
+            padding: 10px 14px;
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -498,14 +445,12 @@
             background: #f5efe9;
             color: #5c2c16;
             font-weight: 800;
-            box-shadow: 0 4px 12px rgba(92, 44, 22, 0.08);
-            transform: translateY(-2px);
         }
 
         .badge-cart-count {
             position: absolute;
-            top: 2px;
-            right: 22%;
+            top: 4px;
+            right: 25%;
             background: #e74c3c;
             color: white;
             border-radius: 10px;
@@ -537,24 +482,18 @@
         .modal-content h3 { margin-top: 0; font-size: 18px; color: #5c2c16; }
         .modal-content p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
         .modal-close {
-            background: #5c2c16;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
+            background: #5c2c16; color: white; border: none;
+            padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%;
         }
     </style>
 </head>
 <body>
 
-    <!-- МОДАЛЬНОЕ ОКНО РЕГИСТРАЦИИ (ПРИ ПЕРВОМ ВХОДЕ) -->
+    <!-- МОДАЛЬНОЕ ОКНО РЕГИСТРАЦИИ (1 РАЗ) -->
     <div id="onboardingModal" class="onboarding-overlay" style="display: none;">
         <div class="onboarding-content">
             <h3>Добро пожаловать в Terassa</h3>
-            <p>Заполните небольшую анкету для продолжения</p>
+            <p>Заполните анкету для продолжения (1 раз)</p>
             <form onsubmit="handleRegistration(event)">
                 <div class="form-group">
                     <label>Имя</label>
@@ -576,19 +515,27 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО АЛЬТЕРНАТИВЫ ИЗ СТОП-ЛИСТА -->
+    <div id="stopModal" class="modal-overlay" onclick="closeStopModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 style="color: #e74c3c;">Блюдо временно на стопе</h3>
+            <p id="stopModalText">К сожалению, этого блюда сейчас нет. Попробуйте похожее:</p>
+            <div id="alternativeItemContainer" style="background: #faf8f5; padding: 12px; border-radius: 12px; margin-bottom: 15px; font-weight: 700;"></div>
+            <button class="modal-close" onclick="closeStopModal()">Понятно</button>
+        </div>
+    </div>
+
     <div class="container">
 
         <!-- ЭКРАН 1: ГЛАВНАЯ -->
         <div id="screen-home" class="screen active">
-            <!-- Шапка с фоновым изображением по ссылке -->
             <div class="hero-header">
                 <div class="hero-content">
                     <h1>Terassa</h1>
-                    <p>Ресторан</p>
+                    <p>Ресторан в Нячанге</p>
                 </div>
             </div>
 
-            <!-- Интерактивные табы -->
             <div class="promo-slider">
                 <div class="promo-card" onclick="showPromoModal('Скидки')">Скидки</div>
                 <div class="promo-card" onclick="showPromoModal('Акции')">Акции</div>
@@ -618,20 +565,6 @@
                     </div>
                     <div class="popular-arrow">→</div>
                 </div>
-                <div class="popular-card" onclick="openMenuAndSelect('Жареный гребешок с креветкой под азиатским соусом')">
-                    <div class="popular-info">
-                        <h5>Жареный гребешок с креветкой под азиатским соусом</h5>
-                        <div class="price">250 000 đ</div>
-                    </div>
-                    <div class="popular-arrow">→</div>
-                </div>
-                <div class="popular-card" onclick="openMenuAndSelect('Свиные рёбра в медово-горчичном соусе')">
-                    <div class="popular-info">
-                        <h5>Свиные рёбра в медово-горчичном соусе</h5>
-                        <div class="price">250 000 đ</div>
-                    </div>
-                    <div class="popular-arrow">→</div>
-                </div>
             </div>
         </div>
 
@@ -642,7 +575,7 @@
             </div>
             
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Поиск блюд и напитков..." oninput="renderMenu()">
+                <input type="text" id="searchInput" placeholder="Поиск блюд (например: курица)..." oninput="renderMenu()">
             </div>
 
             <div class="custom-dropdown-wrapper">
@@ -678,7 +611,7 @@
                         <button type="button" class="btn-geo" onclick="requestUserGeolocation()">
                             📍 Поделиться актуальной геолокацией
                         </button>
-                        <input type="text" id="deliveryAddress" placeholder="Адрес доставки (или координаты GPS)" style="width: 100%; padding: 12px; border: 1px solid #e2dacd; border-radius: 12px; box-sizing: border-box; font-size: 14px;">
+                        <input type="text" id="deliveryAddress" placeholder="Адрес доставки или GPS координаты" style="width: 100%; padding: 12px; border: 1px solid #e2dacd; border-radius: 12px; box-sizing: border-box; font-size: 14px;">
                     </div>
 
                     <div class="cart-total-row">
@@ -709,6 +642,11 @@
                     <span class="profile-label">Пол</span>
                     <span class="profile-val" id="valGender">Мужской</span>
                 </div>
+                <div style="margin-top: 15px; border-top: 1px solid #f0ece1; padding-top: 12px;">
+                    <button class="btn-geo" style="background:#2c3e50; color:white; border:none;" onclick="toggleAdminMode()">
+                        🔑 Режим администратора: <span id="adminStatusText" style="margin-left: 4px;">ВЫКЛ</span>
+                    </button>
+                </div>
             </div>
 
             <div class="section-title" style="font-size: 18px;">История заказов</div>
@@ -717,16 +655,16 @@
 
     </div>
 
-    <!-- Модальное окно для промо/акций -->
+    <!-- Модалка акций -->
     <div id="promoModal" class="modal-overlay" onclick="closePromoModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 id="modalTitle">Информация</h3>
-            <p id="modalText">Скоро тут появятся...</p>
+            <p id="modalText">Акции действуют для всех гостей!</p>
             <button class="modal-close" onclick="closePromoModal()">Понятно</button>
         </div>
     </div>
 
-    <!-- Нижний таб-бар -->
+    <!-- Нижняя навигация -->
     <nav>
         <button id="nav-home" class="active" onclick="switchScreen('home')">Главная</button>
         <button id="nav-menu" onclick="switchScreen('menu')">Меню</button>
@@ -738,6 +676,7 @@
     </nav>
 
     <script>
+        // Исходные данные меню с категориями
         const menuSections = [
             {
                 sectionName: "Салаты",
@@ -745,107 +684,45 @@
                     { name: "Тартар из тунца с авокадо", price: 160000, desc: "Тунец, авокадо, красный лук, оливковое масло, специи." },
                     { name: "Цезарь с креветками", price: 150000, desc: "Листья салата, креветки, томаты черри, перепелиные яйца, сухарики, соус «Цезарь»." },
                     { name: "Цезарь с курицей", price: 130000, desc: "Листья салата, куриное филе, томаты черри, перепелиные яйца, сухарики, соус «Цезарь»." },
-                    { name: "Тайский салат с креветками", price: 150000, desc: "Креветки, авокадо, манго, огурец, болгарский перец, кинза, кунжут, специи." },
-                    { name: "Тёплый салат с хрустящим баклажаном", price: 120000, desc: "Хрустящий баклажан, болгарский перец, крем-чиз, кинза, кунжут, специи." }
-                ]
-            },
-            {
-                sectionName: "Холодные закуски",
-                items: [
-                    { name: "Овощной ассорти", price: 70000, desc: "Свежие овощи и зелень." },
-                    { name: "Сырная тарелка", price: 190000, desc: "Гауда, пармезан, дорблю." },
-                    { name: "Сало с горчицей и хлебом", price: 80000, desc: "Домашнее сало с горчицей и хлебом." },
-                    { name: "Закуска под рюмочку", price: 80000, desc: "Огурцы маринованные, домашнее сало, маринованные грибы." }
+                    { name: "Тайский салат с креветками", price: 150000, desc: "Креветки, авокадо, манго, огурец, болгарский перец, кинза, кунжут, специи." }
                 ]
             },
             {
                 sectionName: "Горячие блюда",
                 items: [
-                    { name: "Жульен с грибами", price: 80000, desc: "Нежные грибы под запеченной сырной корочкой." },
                     { name: "Жульен с курицей", price: 90000, desc: "Куриное филе, грибы, сливочный соус, сыр." },
                     { name: "Жульен с креветкой", price: 100000, desc: "Тигровые креветки, сливочный соус, сыр." },
                     { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, черри, соус тартар." },
-                    { name: "Стейк из тунца", price: 150000, desc: "Стейк тунца, спаржа, брокколи, черри, соус тартар." },
-                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, сырная шапочка." },
-                    { name: "Свинина по-французски", price: 160000, desc: "Отбивная свинина на гратене, помидор, сырная шапочка." },
-                    { name: "Отварной картофель с малосольной селедочкой", price: 180000, desc: "Картофель, сельдь, маринованный лук." },
-                    { name: "Жареный гребешок с креветкой под азиатским соусом", price: 250000, desc: "Морской гребешок и креветки с азиатским соусом." }
+                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, сырная шапочка." }
                 ]
             },
             {
                 sectionName: "Свиные рёбра",
                 items: [
                     { name: "Свиные рёбра в медово-горчичном соусе", price: 250000, desc: "Томленные 6 часов, соус кетчуп, кисло-сладкий." },
-                    { name: "Свиные рёбра в соусе Терияки", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски, кунжут." },
-                    { name: "Свиные рёбра в соусе Барбекю", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски." }
-                ]
-            },
-            {
-                sectionName: "Говяжьи рёбра",
-                items: [
-                    { name: "Говяжьи рёбра в медово-горчичном соусе", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски, соусы." },
-                    { name: "Говяжьи рёбра в соусе Терияки", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски, кунжут." },
-                    { name: "Говяжьи рёбра в соусе Барбекю", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски." }
-                ]
-            },
-            {
-                sectionName: "Гарниры",
-                items: [
-                    { name: "Картофель по-деревенски", price: 80000, desc: "Румяные картофельные дольки со специями." },
-                    { name: "Картофель фри", price: 70000, desc: "Хрустящий картофель фри." },
-                    { name: "Нежное гороховое пюре", price: 80000, desc: "Домашнее гороховое пюре." }
-                ]
-            },
-            {
-                sectionName: "Пельмени и вареники",
-                items: [
-                    { name: "Домашние пельмени с говядиной", price: 120000, desc: "Со сметаной." },
-                    { name: "Домашние пельмени со свининой", price: 110000, desc: "Со сметаной." },
-                    { name: "Домашние пельмени с курицей", price: 100000, desc: "Со сметаной." },
-                    { name: "Домашние вареники с картофелем", price: 100000, desc: "Подаются со сметаной." },
-                    { name: "Вареники с лососем, креветкой и сливочным сыром", price: 130000, desc: "Изысканные вареники с морепродуктами." }
-                ]
-            },
-            {
-                sectionName: "Закуски к пиву",
-                items: [
-                    { name: "Копчёная перепёлка (2 шт.)", price: 120000, desc: "Отличный выбор к пенному." },
-                    { name: "Джерки из говядины", price: 120000, desc: "Сушеное мясо говядины." },
-                    { name: "Джерки из курицы", price: 100000, desc: "Сушеное куриное филе." },
-                    { name: "Джерки из свинины", price: 110000, desc: "Сушеная свинина." },
-                    { name: "Скумбрия холодного копчения", price: 180000, desc: "Ароматная рыбка." },
-                    { name: "Филе сибаса холодного копчения (50 г)", price: 120000, desc: "Деликатес." },
-                    { name: "Мойва холодного копчения", price: 120000, desc: "Копченая мойва." }
-                ]
-            },
-            {
-                sectionName: "Десерты",
-                items: [
-                    { name: "Наполеон", price: 70000, desc: "Слоёные коржи с заварным кремом." },
-                    { name: "Медовик", price: 70000, desc: "Медовые коржи со сметанным кремом." },
-                    { name: "Классический чизкейк", price: 70000, desc: "Сливочный чизкейк." }
-                ]
-            },
-            {
-                sectionName: "Бар и напитки",
-                items: [
-                    { name: "Водка Абсолют (50 мл)", price: 60000, desc: "Крепкий алкоголь." },
-                    { name: "Ром Бакарди (50 мл)", price: 80000, desc: "Качественный ром." },
-                    { name: "Виски Балантайс (50 мл)", price: 80000, desc: "Шотландский виски." },
-                    { name: "Вино красное / белое сухое (Чили, бокал 150 мл)", price: 120000, desc: "Чилийское вино." },
-                    { name: "Aperol Spritz", price: 140000, desc: "Коктейль." },
-                    { name: "Mojito", price: 140000, desc: "Коктейль." },
-                    { name: "Coca Cola / Fanta / Sprite", price: 25000, desc: "0.33 л." },
-                    { name: "Капучино", price: 45000, desc: "Кофе." },
-                    { name: "Чайник черного/зеленого чая (350 мл)", price: 50000, desc: "Чай." }
+                    { name: "Свиные рёбра в соусе Терияки", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски, кунжут." }
                 ]
             }
         ];
 
         let cart = [];
+        let stopList = []; // Массив названий блюд на стопе
+        let isAdmin = false;
+        
+        // Пример заказов с синхронизируемыми статусами
         let orderHistory = [
-            { id: 3, date: "18.08.2026, 17:02:35", total: 340000, status: "Новый", itemsStr: "Жульен с курицей × 1, Жульен с креветкой × 1, Лосось на гриле × 1" }
+            { 
+                id: 104, 
+                date: "18.08.2026, 17:02:35", 
+                total: 240000, 
+                status: "Готов / Передан курьеру", 
+                statusCode: "ready",
+                itemsStr: "Цезарь с курицей × 1, Жульен с курицей × 1",
+                type: "delivery",
+                address: "Широта: 12.2388, Долгота: 109.1967 (GPS)"
+            }
         ];
+        
         let currentOrderType = 'pickup';
         let selectedCategoryIndex = 0;
         let userData = { name: "Арсен", birthday: "30.09.2002", gender: "Мужской" };
@@ -860,7 +737,8 @@
             document.addEventListener('click', (e) => {
                 const wrapper = document.querySelector('.custom-dropdown-wrapper');
                 if (wrapper && !wrapper.contains(e.target)) {
-                    document.getElementById('dropdownMenuList').classList.remove('open');
+                    const menuList = document.getElementById('dropdownMenuList');
+                    if(menuList) menuList.classList.remove('open');
                 }
             });
         });
@@ -884,10 +762,8 @@
             if (name && birthday) {
                 const parts = birthday.split('-');
                 const formattedDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
-                
                 userData = { name, birthday: formattedDate, gender };
                 localStorage.setItem('terassa_user', JSON.stringify(userData));
-                
                 document.getElementById('onboardingModal').style.display = 'none';
                 updateProfileUI();
             }
@@ -899,6 +775,38 @@
             document.getElementById('valBirthday').textContent = userData.birthday;
             document.getElementById('valGender').textContent = userData.gender;
             document.getElementById('profileInitial').textContent = userData.name.charAt(0).toUpperCase();
+        }
+
+        function toggleAdminMode() {
+            isAdmin = !isAdmin;
+            document.getElementById('adminStatusText').textContent = isAdmin ? 'ВКЛ' : 'ВЫКЛ';
+            renderMenu();
+        }
+
+        // Админ-функция: поставить/убрать с стоп-листа
+        function toggleStopListItem(dishName) {
+            if (stopList.includes(dishName)) {
+                stopList = stopList.filter(item => item !== dishName);
+            } else {
+                stopList.push(dishName);
+            }
+            renderMenu();
+        }
+
+        // Поиск похожего блюда из той же категории при клике на стоп-блюдо
+        function handleStopItemClick(dishName, categoryName) {
+            const category = menuSections.find(sec => sec.sectionName === categoryName);
+            let alternative = category.items.find(i => i.name !== dishName && !stopList.includes(i.name));
+            
+            if (!alternative) alternative = category.items[0]; // fallback
+
+            document.getElementById('stopModalText').innerHTML = `Блюдо <b>«${dishName}»</b> временно на стоп-листе.<br>Рекомендуем попробовать похожее:`;
+            document.getElementById('alternativeItemContainer').innerHTML = `${alternative.name} — ${alternative.price.toLocaleString()} đ`;
+            document.getElementById('stopModal').style.display = 'flex';
+        }
+
+        function closeStopModal() {
+            document.getElementById('stopModal').style.display = 'none';
         }
 
         function initCustomDropdown() {
@@ -917,21 +825,13 @@
         }
 
         function toggleCategoryDropdown() {
-            const list = document.getElementById('dropdownMenuList');
-            list.classList.toggle('open');
+            document.getElementById('dropdownMenuList').classList.toggle('open');
         }
 
         function selectCategory(index) {
             selectedCategoryIndex = index;
             document.getElementById('selectedCategoryLabel').textContent = menuSections[index].sectionName;
             document.getElementById('dropdownMenuList').classList.remove('open');
-            
-            const items = document.querySelectorAll('.dropdown-item');
-            items.forEach((el, idx) => {
-                if (idx === index) el.classList.add('selected');
-                else el.classList.remove('selected');
-            });
-
             renderMenu();
         }
 
@@ -961,17 +861,10 @@
         }
 
         function showPromoModal(type) {
-            const modal = document.getElementById('promoModal');
-            const title = document.getElementById('modalTitle');
-            const text = document.getElementById('modalText');
-
-            title.textContent = type;
-            if (type === 'Скидки') text.textContent = 'Скоро тут появятся скидки!';
-            else if (type === 'Акции') text.textContent = 'Скоро тут появятся акции!';
-            else if (type === 'Промокод') text.textContent = 'Скоро тут появятся промокоды!';
-            modal.style.display = 'flex';
+            document.getElementById('modalTitle').textContent = type;
+            document.getElementById('modalText').textContent = `Актуальные ${type.toLowerCase()} доступны всем гостям ресторана!`;
+            document.getElementById('promoModal').style.display = 'flex';
         }
-
         function closePromoModal() {
             document.getElementById('promoModal').style.display = 'none';
         }
@@ -983,10 +876,11 @@
             let html = '';
 
             if (searchQuery !== '') {
+                // Поиск по всему меню с указанием категории
                 menuSections.forEach(section => {
                     section.items.forEach(item => {
                         if (item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery)) {
-                            html += createFoodCardHtml(item);
+                            html += createFoodCardHtml(item, section.sectionName);
                         }
                     });
                 });
@@ -994,7 +888,7 @@
                 const section = menuSections[selectedCategoryIndex];
                 if (section) {
                     section.items.forEach(item => {
-                        html += createFoodCardHtml(item);
+                        html += createFoodCardHtml(item, section.sectionName);
                     });
                 }
             }
@@ -1006,25 +900,40 @@
             container.innerHTML = html;
         }
 
-        function createFoodCardHtml(item) {
+        function createFoodCardHtml(item, categoryName) {
             const cartItem = cart.find(i => i.name === item.name);
             const qty = cartItem ? cartItem.quantity : 0;
             const uniqueId = 'ing_' + item.name.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
+            const isStopped = stopList.includes(item.name);
+
+            let adminControls = '';
+            if (isAdmin) {
+                adminControls = `<button class="admin-stop-btn ${isStopped ? 'in-stop' : ''}" onclick="toggleStopListItem('${item.name}')">${isStopped ? 'Убрать со стопа' : 'В стоп-лист'}</button>`;
+            }
+
+            let stopBadgeHtml = isStopped ? `<div class="stop-badge">СТОП-ЛИСТ</div>` : '';
+            let clickAction = isStopped && !isAdmin 
+                ? `onclick="handleStopItemClick('${item.name}', '${categoryName}')"` 
+                : '';
 
             return `
-                <div class="food-card">
+                <div class="food-card" ${clickAction}>
                     <div class="food-card-top">
                         <div class="food-details">
+                            <div class="food-category-label">${categoryName}</div>
                             <div class="food-title">${item.name}</div>
-                            <button class="ingredients-toggle-btn" onclick="toggleIngredients('${uniqueId}')">состав</button>
+                            ${stopBadgeHtml}
+                            <div><button class="ingredients-toggle-btn" onclick="event.stopPropagation(); toggleIngredients('${uniqueId}')">состав</button></div>
+                            ${adminControls}
                         </div>
                         <div class="food-right-column">
                             <div class="food-price">${item.price.toLocaleString()} đ</div>
-                            <div class="counter-controls">
+                            ${!isStopped ? `
+                            <div class="counter-controls" onclick="event.stopPropagation()">
                                 <button class="counter-btn" onclick="changeQuantity('${item.name}', ${item.price}, -1)">−</button>
                                 <span class="counter-value">${qty}</span>
                                 <button class="counter-btn plus" onclick="changeQuantity('${item.name}', ${item.price}, 1)">+</button>
-                            </div>
+                            </div>` : '<span style="font-size:12px; color:#e74c3c; font-weight:700;">Недоступно</span>'}
                         </div>
                     </div>
                     <div id="${uniqueId}" class="ingredients-box">${item.desc}</div>
@@ -1033,21 +942,17 @@
         }
 
         function toggleIngredients(id) {
-            const box = document.getElementById(id);
-            box.classList.toggle('open');
+            document.getElementById(id).classList.toggle('open');
         }
 
         function changeQuantity(name, price, delta) {
             const existing = cart.find(i => i.name === name);
             if (existing) {
                 existing.quantity += delta;
-                if (existing.quantity <= 0) {
-                    cart = cart.filter(i => i.name !== name);
-                }
+                if (existing.quantity <= 0) cart = cart.filter(i => i.name !== name);
             } else if (delta > 0) {
                 cart.push({ name, price, quantity: 1 });
             }
-
             renderMenu();
             updateCartBadge();
         }
@@ -1068,34 +973,23 @@
             document.getElementById('type-pickup').classList.remove('active');
             document.getElementById('type-delivery').classList.remove('active');
             document.getElementById(`type-${type}`).classList.add('active');
-
-            const addressContainer = document.getElementById('delivery-address-container');
-            if (type === 'delivery') {
-                addressContainer.style.display = 'block';
-            } else {
-                addressContainer.style.display = 'none';
-            }
+            document.getElementById('delivery-address-container').style.display = (type === 'delivery') ? 'block' : 'none';
         }
 
         function requestUserGeolocation() {
             const addressInput = document.getElementById('deliveryAddress');
             if (!navigator.geolocation) {
-                alert('Геолокация не поддерживается вашим браузером');
+                alert('Геолокация не поддерживается');
                 return;
             }
-
             addressInput.placeholder = 'Определение координат GPS...';
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude.toFixed(6);
-                    const lon = position.coords.longitude.toFixed(6);
-                    addressInput.value = `Широта: ${lat}, Долгота: ${lon} (Моя геолокация)`;
+                (pos) => {
+                    const lat = pos.coords.latitude.toFixed(6);
+                    const lon = pos.coords.longitude.toFixed(6);
+                    addressInput.value = `Широта: ${lat}, Долгота: ${lon} (GPS)`;
                 },
-                (error) => {
-                    alert('Не удалось получить геолокацию. Разрешите доступ к геопозиции в настройках.');
-                    addressInput.placeholder = 'Адрес доставки (улица, дом, кв.)';
-                },
-                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                () => { alert('Не удалось получить геолокацию.'); }
             );
         }
 
@@ -1138,30 +1032,36 @@
 
         function updateCartItemQty(index, delta) {
             cart[index].quantity += delta;
-            if (cart[index].quantity <= 0) {
-                cart.splice(index, 1);
-            }
+            if (cart[index].quantity <= 0) cart.splice(index, 1);
             renderCart();
             updateCartBadge();
         }
 
+        // Оформление заказа (отправка заявки в группу -1004208823431)
         function checkout() {
             let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             let itemsStr = cart.map(i => `${i.name} × ${i.quantity}`).join(', ');
+            let address = currentOrderType === 'delivery' ? document.getElementById('deliveryAddress').value : 'Самовывоз из ресторана';
             
-            const newOrderId = orderHistory.length > 0 ? orderHistory[0].id + 1 : 1;
+            const newOrderId = Math.floor(100 + Math.random() * 900);
             const now = new Date();
             const dateStr = now.toLocaleDateString('ru-RU') + ', ' + now.toLocaleTimeString('ru-RU');
+
+            // Симулируем отправку в группу ID: -1004208823431
+            console.log(`[Telegram Group -1004208823431] Новый заказ #${newOrderId} от пользователя ID: 123456 (${userData.name}). Способ: ${currentOrderType}. Адрес/Локация: ${address}. Сумма: ${total} đ. Состав: ${itemsStr}`);
 
             orderHistory.unshift({
                 id: newOrderId,
                 date: dateStr,
                 total: total,
                 status: "Новый",
-                itemsStr: itemsStr
+                statusCode: "new",
+                itemsStr: itemsStr,
+                type: currentOrderType,
+                address: address
             });
 
-            alert(`Заказ #${newOrderId} успешно оформлен!`);
+            alert(`Заказ #${newOrderId} успешно оформлен и отправлен в ресторан!`);
             cart = [];
             updateCartBadge();
             switchScreen('profile');
@@ -1178,13 +1078,14 @@
                 <div class="order-history-card">
                     <div class="order-card-header">
                         <span>Заказ #${ord.id}</span>
-                        <span style="color: #1a1a1a;">${ord.total.toLocaleString()} đ</span>
+                        <span>${ord.total.toLocaleString()} đ</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <div class="order-card-date">${ord.date}</div>
-                        <span class="badge-new">${ord.status}</span>
+                        <span class="badge-status status-${ord.statusCode}">${ord.status}</span>
                     </div>
-                    <div class="order-card-items">${ord.itemsStr}</div>
+                    <div class="order-card-items"><b>Состав:</b> ${ord.itemsStr}</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;"><b>Тип:</b> ${ord.type === 'delivery' ? 'Доставка (' + ord.address + ')' : 'Самовывоз'}</div>
                 </div>
             `).join('');
         }
