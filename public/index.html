@@ -3,29 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terassa - Ресторан</title>
+    <title>Terassa - Меню и Заказ</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; text-align: center; }
-        h1 { color: #333; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-top: 20px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; }
+        body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 0; padding-bottom: 70px; }
+        header { background: #2c3e50; color: white; padding: 15px; text-align: center; }
+        .container { padding: 15px; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        /* Меню и карточки товаров */
+        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card h3 { margin: 0 0 10px 0; font-size: 18px; }
+        .price { color: #e74c3c; font-weight: bold; margin-bottom: 10px; }
+        
+        /* Кнопки */
+        button { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 14px; }
+        button.secondary { background: #95a5a6; }
+        
+        /* Нижняя навигация */
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; border-top: 1px solid #ddd; box-shadow: 0 -2px 5px rgba(0,0,0,0.05); }
+        nav button { background: none; color: #7f8c8d; border: none; padding: 15px 0; font-size: 12px; flex: 1; border-radius: 0; }
+        nav button.active { color: #27ae60; font-weight: bold; }
+
+        /* Поля формы в профиле */
+        input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-    <h1>Terassa 🌿</h1>
-    <p>Итальянская кухня в Нячанге</p>
+    <header>
+        <h2>Terassa 🌿</h2>
+    </header>
 
-    <div class="card">
-        <h3>Ваш профиль</h3>
-        <input type="text" id="authName" placeholder="Имя">
-        <input type="text" id="authSurname" placeholder="Фамилия">
-        <button onclick="alert('Данные сохранены!')">Готово</button>
+    <div class="container">
+        <!-- Экран 1: МЕНЮ -->
+        <div id="screen-menu" class="screen active">
+            <h3>Меню ресторана</h3>
+            <div class="menu-grid" id="menu-items">
+                <!-- Динамически загружаемые товары -->
+                <div class="card">
+                    <h3>Стейк Рибай</h3>
+                    <div class="price">450,000 đ</div>
+                    <button onclick="addToCart('Стейк Рибай', 450000)">В корзину</button>
+                </div>
+                <div class="card">
+                    <h3>Пицца Маргарита</h3>
+                    <div class="price">180,000 đ</div>
+                    <button onclick="addToCart('Пицца Маргарита', 180000)">В корзину</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран 2: КОРЗИНА -->
+        <div id="screen-cart" class="screen">
+            <h3>Корзина</h3>
+            <div id="cart-items">
+                <p>Ваша корзина пуста</p>
+            </div>
+            <div id="cart-total" style="font-weight: bold; margin: 15px 0;"></div>
+            <button id="checkout-btn" style="display:none;" onclick="checkout()">Оформить заказ</button>
+        </div>
+
+        <!-- Экран 3: ПРОФИЛЬ -->
+        <div id="screen-profile" class="screen">
+            <h3>Ваш Профиль</h3>
+            <div class="card">
+                <label>Имя:</label>
+                <input type="text" id="authName" placeholder="Имя">
+                <label>Фамилия:</label>
+                <input type="text" id="authSurname" placeholder="Фамилия">
+                <label>Telegram ID (авто):</label>
+                <input type="text" id="authTgId" disabled style="background: #eee;">
+                <button style="margin-top: 10px;" onclick="alert('Данные профиля обновлены')">Сохранить</button>
+            </div>
+        </div>
     </div>
 
+    <!-- Нижнее меню навигации -->
+    <nav>
+        <button id="nav-menu" class="active" onclick="switchScreen('menu')">🍽 Меню</button>
+        <button id="nav-cart" onclick="switchScreen('cart')">🛒 Корзина</button>
+        <button id="nav-profile" onclick="switchScreen('profile')">👤 Профиль</button>
+    </nav>
+
     <script>
+        let cart = [];
+
+        // Переключение экранов
+        function switchScreen(screenName) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(`screen-${screenName}`).classList.add('active');
+            document.getElementById(`nav-${screenName}`).classList.add('active');
+
+            if (screenName === 'cart') renderCart();
+        }
+
+        // Логика корзины
+        function addToCart(name, price) {
+            const item = cart.find(i => i.name === name);
+            if (item) {
+                item.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            alert(`Добавлено в корзину: ${name}`);
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const totalContainer = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p>Ваша корзина пуста</p>';
+                totalContainer.innerHTML = '';
+                checkoutBtn.style.display = 'none';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                html += `
+                    <div class="card" style="margin-bottom: 10px; padding: 10px;">
+                        <strong>${item.name}</strong><br>
+                        ${item.price} đ x ${item.quantity} = ${item.price * item.quantity} đ
+                        <button class="secondary" style="width: auto; padding: 2px 8px; margin-top: 5px;" onclick="removeFromCart(${index})">Удалить</button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            totalContainer.innerHTML = `Итого: ${total} đ`;
+            checkoutBtn.style.display = 'block';
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+        function checkout() {
+            alert('Заказ успешно оформлен!');
+            cart = [];
+            switchScreen('menu');
+        }
+
+        // Интеграция с Telegram WebApp и автоматическая синхронизация
         document.addEventListener('DOMContentLoaded', () => {
             if (window.Telegram && window.Telegram.WebApp) {
                 const tg = window.Telegram.WebApp;
@@ -34,14 +163,17 @@
                 const tgUser = tg.initDataUnsafe?.user;
 
                 if (tgUser && tgUser.id) {
-                    // Генерация или получение стабильного UUID устройства
+                    // Заполняем поле Telegram ID в профиле
+                    document.getElementById('authTgId').value = tgUser.id;
+
+                    // Генерация стабильного deviceUuid для отслеживания смены аккаунта
                     let deviceUuid = localStorage.getItem('terassa_device_uuid');
                     if (!deviceUuid) {
                         deviceUuid = 'dev_' + Math.random().toString(36).substring(2) + Date.now();
                         localStorage.setItem('terassa_device_uuid', deviceUuid);
                     }
 
-                    // Синхронизация с сервером
+                    // Отправляем данные на бэкенд для проверки смены аккаунта и создания записи
                     fetch('/api/user/sync', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -57,7 +189,9 @@
                     .then(data => {
                         if (data && data.firstName) {
                             const nameInput = document.getElementById('authName');
+                            const surnameInput = document.getElementById('authSurname');
                             if (nameInput && !nameInput.value) nameInput.value = data.firstName;
+                            if (surnameInput && !surnameInput.value && tgUser.last_name) surnameInput.value = tgUser.last_name;
                         }
                     })
                     .catch(err => console.error('Ошибка синхронизации сессии:', err));
