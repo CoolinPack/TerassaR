@@ -84,6 +84,28 @@
             color: var(--text-main);
         }
 
+        /* Приветственный баннер на главной */
+        .welcome-banner {
+            background: linear-gradient(135deg, #5c2c16 0%, #7a3d20 100%);
+            color: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        .welcome-banner h4 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            font-weight: 800;
+        }
+        .welcome-banner p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.95;
+        }
+
         /* Шапка с фоном */
         .hero-header {
             position: relative;
@@ -523,6 +545,12 @@
 
         <!-- ЭКРАН 1: ГЛАВНАЯ -->
         <div id="screen-home" class="screen active">
+            <!-- Приветственный блок -->
+            <div class="welcome-banner">
+                <h4>Добро пожаловать в Terassa ресторан</h4>
+                <p>Заказывайте наши восхитительные блюда и напитки не выходя из дома!</p>
+            </div>
+
             <div class="hero-header">
                 <div class="hero-content">
                     <h1>Terassa</h1>
@@ -669,7 +697,6 @@
     </nav>
 
     <script>
-        // Полный каталог блюд, напитков и позиций меню ресторана Террасса
         const menuSections = [
             {
                 sectionName: "Салаты",
@@ -782,7 +809,7 @@
                 items: [
                     { name: "Вино красное сухое (Чили, 150 г)", price: 120000, desc: "Красное сухое вино порционно." },
                     { name: "Вино белое сухое (Чили, 150 г)", price: 120000, desc: "Белое сухое вино порционно." },
-                    { name: "Вино красное сухое (Чили, 750 мл)", price: 400000,- desc: "Бутылка красного сухого вина." },
+                    { name: "Вино красное сухое (Чили, 750 мл)", price: 400000, desc: "Бутылка красного сухого вина." },
                     { name: "Вино белое сухое (Чили, 750 мл)", price: 400000, desc: "Бутылка белого сухого вина." }
                 ]
             },
@@ -859,7 +886,7 @@
         const tg = window.Telegram.WebApp;
 
         document.addEventListener('DOMContentLoaded', () => {
-            tg.expand();
+            if (tg && tg.expand) tg.expand();
             checkUserRegistration();
             initCustomDropdown();
             renderMenu();
@@ -946,7 +973,10 @@
                 const item = document.createElement('div');
                 item.className = `dropdown-item ${index === selectedCategoryIndex ? 'selected' : ''}`;
                 item.textContent = section.sectionName;
-                item.onclick = () => selectCategory(index);
+                item.onclick = (e) => {
+                    e.stopPropagation();
+                    selectCategory(index);
+                };
                 listContainer.appendChild(item);
             });
 
@@ -961,6 +991,7 @@
             selectedCategoryIndex = index;
             document.getElementById('selectedCategoryLabel').textContent = menuSections[index].sectionName;
             document.getElementById('dropdownMenuList').classList.remove('open');
+            initCustomDropdown();
             renderMenu();
         }
 
@@ -968,8 +999,11 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
 
-            document.getElementById(`screen-${screenName}`).classList.add('active');
-            document.getElementById(`nav-${screenName}`).classList.add('active');
+            const targetScreen = document.getElementById(`screen-${screenName}`);
+            const targetNav = document.getElementById(`nav-${screenName}`);
+
+            if (targetScreen) targetScreen.classList.add('active');
+            if (targetNav) targetNav.classList.add('active');
 
             if (screenName === 'cart') renderCart();
             if (screenName === 'profile') renderOrderHistory();
@@ -1000,7 +1034,8 @@
 
         function renderMenu() {
             const container = document.getElementById('menu-container');
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            const searchInput = document.getElementById('searchInput');
+            const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
             let html = '';
 
@@ -1070,7 +1105,8 @@
         }
 
         function toggleIngredients(id) {
-            document.getElementById(id).classList.toggle('open');
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('open');
         }
 
         function changeQuantity(name, price, delta) {
@@ -1087,6 +1123,7 @@
 
         function updateCartBadge() {
             const badge = document.getElementById('cartBadge');
+            if(!badge) return;
             const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             if (totalCount > 0) {
                 badge.style.display = 'block';
@@ -1165,17 +1202,17 @@
             updateCartBadge();
         }
 
-        // Отправка заказа в группу -1004208823431
         function checkout() {
             let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             let itemsStr = cart.map(i => `${i.name} × ${i.quantity}`).join(', ');
-            let address = currentOrderType === 'delivery' ? document.getElementById('deliveryAddress').value : 'Самовывоз из ресторана';
+            let addressInput = document.getElementById('deliveryAddress');
+            let address = currentOrderType === 'delivery' && addressInput ? addressInput.value : 'Самовывоз из ресторана';
             
             const newOrderId = Math.floor(100 + Math.random() * 900);
             const now = new Date();
             const dateStr = now.toLocaleDateString('ru-RU') + ', ' + now.toLocaleTimeString('ru-RU');
 
-            const tgUser = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : { id: "Гость", username: "Нет username" };
+            const tgUser = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : { id: "Гость", username: "Нет username" };
             
             const orderPayload = {
                 order_id: newOrderId,
@@ -1190,7 +1227,7 @@
                 time: dateStr
             };
 
-            if (tg.initData) {
+            if (tg && tg.initData) {
                 tg.sendData(JSON.stringify(orderPayload));
             } else {
                 console.log("Заказ отправлен в группу -1004208823431:", orderPayload);
@@ -1215,6 +1252,7 @@
 
         function renderOrderHistory() {
             const container = document.getElementById('order-history-container');
+            if(!container) return;
             if (orderHistory.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">У вас пока нет заказов</p>';
                 return;
