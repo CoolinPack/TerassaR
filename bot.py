@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
-from config import BOT_TOKEN
+from config import BOT_TOKEN, GROUP_CHAT_ID
 import database as db
 
 # Настройка логирования
@@ -161,18 +161,18 @@ async def create_order(data: OrderSchema):
   try:
     logging.info(
         "Отправляю API-заказ #%s в группу %s",
-        data.order_id, GROUP_ID
+        data.order_id, GROUP_CHAT_ID
     )
-    await bot.send_message(GROUP_ID, text, parse_mode="HTML")
+    await bot.send_message(GROUP_CHAT_ID, text, parse_mode="HTML")
     logging.info(
         "API-заказ #%s успешно отправлен в группу %s",
-        data.order_id, GROUP_ID
+        data.order_id, GROUP_CHAT_ID
     )
     return {"success": True, "order_id": data.order_id}
   except Exception as e:
     logging.error(
         "Ошибка отправки API-заказа #%s в группу %s: %s",
-        data.order_id, GROUP_ID, e, exc_info=True
+        data.order_id, GROUP_CHAT_ID, e, exc_info=True
     )
     raise HTTPException(
         status_code=502,
@@ -180,14 +180,11 @@ async def create_order(data: OrderSchema):
     )
 
 
-
 # Инициализация Telegram Бота
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-# Берем ID группы из переменных окружения Render (GROUP_CHAT_ID)
-GROUP_ID = int(os.environ.get("GROUP_CHAT_ID", -1004208823431))
-logging.info(f"GROUP_ID установлен: {GROUP_ID}")
+logging.info(f"GROUP_CHAT_ID установлен: {GROUP_CHAT_ID}")
 
 
 @dp.message(CommandStart())
@@ -238,17 +235,15 @@ async def receive_web_app_data(message: types.Message):
         f"🕒 <b>Время:</b> {time_str}"
     )
 
-    logging.info(f"Отправляю legacy-заказ #{order_id} в группу {GROUP_ID}")
-    await bot.send_message(GROUP_ID, text, parse_mode="HTML")
-    logging.info(f"Заказ #{order_id} успешно отправлен в группу {GROUP_ID}")
+    logging.info(f"Отправляю legacy-заказ #{order_id} в группу {GROUP_CHAT_ID}")
+    await bot.send_message(GROUP_CHAT_ID, text, parse_mode="HTML")
+    logging.info(f"Заказ #{order_id} успешно отправлен в группу {GROUP_CHAT_ID}")
 
     await message.answer(
         f"Спасибо за заказ #{order_id}! Мы уже начали его готовить."
     )
   except Exception as e:
     logging.error(f"Ошибка обработки заказа из WebApp: {e}", exc_info=True)
-
-
 
 
 # Функция запуска Telegram-бота в фоне параллельно с FastAPI
