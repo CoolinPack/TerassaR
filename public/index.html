@@ -152,7 +152,7 @@
             cursor: pointer;
         }
         .popular-info h5 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; }
-        .popular-info .price { font-size: 14px; font-weight: 700; }
+        .popular-info .price { font-size: 14px; font-weight: 700; color: #5c2c16; }
         .popular-arrow { font-size: 18px; color: #b5835a; }
 
         .search-box { margin-bottom: 14px; }
@@ -248,7 +248,7 @@
         .ingredients-box.open { display: block; }
 
         .food-right-column { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 8px; }
-        .food-price { font-size: 15px; font-weight: 700; }
+        .food-price { font-size: 15px; font-weight: 700; color: #5c2c16; }
 
         .counter-controls {
             display: flex;
@@ -541,21 +541,21 @@
                 <div class="popular-card" onclick="openMenuAndSelect('Тартар из тунца с авокадо')">
                     <div class="popular-info">
                         <h5>Тартар из тунца с авокадо</h5>
-                        <div class="price">160 000 đ</div>
+                        <div class="price">160 000 VND</div>
                     </div>
                     <div class="popular-arrow">→</div>
                 </div>
                 <div class="popular-card" onclick="openMenuAndSelect('Цезарь с креветками')">
                     <div class="popular-info">
                         <h5>Цезарь с креветками</h5>
-                        <div class="price">150 000 đ</div>
+                        <div class="price">150 000 VND</div>
                     </div>
                     <div class="popular-arrow">→</div>
                 </div>
                 <div class="popular-card" onclick="openMenuAndSelect('Лосось на гриле')">
                     <div class="popular-info">
                         <h5>Лосось на гриле</h5>
-                        <div class="price">150 000 đ</div>
+                        <div class="price">150 000 VND</div>
                     </div>
                     <div class="popular-arrow">→</div>
                 </div>
@@ -569,7 +569,7 @@
             </div>
             
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Поиск блюд (например: курица)..." oninput="renderMenu()">
+                <input type="text" id="searchInput" placeholder="Быстрый поиск блюд и напитков (например: тунец, кола)..." oninput="renderMenu()">
             </div>
 
             <div class="custom-dropdown-wrapper">
@@ -610,7 +610,7 @@
 
                     <div class="cart-total-row">
                         <span>Итого</span>
-                        <span id="cart-total-price">0 đ</span>
+                        <span id="cart-total-price">0 VND</span>
                     </div>
 
                     <button class="btn-main" onclick="checkout()">Оформить заказ</button>
@@ -669,48 +669,181 @@
     </nav>
 
     <script>
-        // Полное меню: Первое, Второе, Салаты, Напитки и т.д.
+        // Полный каталог блюд, напитков и позиций меню ресторана Террасса
         const menuSections = [
-            {
-                sectionName: "Первые блюда",
-                items: [
-                    { name: "Традиционный Фо Бо", price: 120000, desc: "Наваристый бульон, говядина, рисовая лапша, зелень, специи." },
-                    { name: "Суп Том Ям с креветками", price: 140000, desc: "Острый тайский суп, креветки, грибы, кокосовое молоко, лемонграсс." },
-                    { name: "Куриный суп с лапшой", price: 90000, desc: "Домашний бульон, куриное филе, лапша, перепелиное яйцо." }
-                ]
-            },
-            {
-                sectionName: "Вторые блюда",
-                items: [
-                    { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, черри, соус тартар." },
-                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, сырная шапочка." },
-                    { name: "Жульен с курицей", price: 90000, desc: "Куриное филе, грибы, сливочный соус, сыр." },
-                    { name: "Жульен с креветкой", price: 100000, desc: "Тигровые креветки, сливочный соус, сыр." }
-                ]
-            },
             {
                 sectionName: "Салаты",
                 items: [
                     { name: "Тартар из тунца с авокадо", price: 160000, desc: "Тунец, авокадо, красный лук, оливковое масло, специи." },
-                    { name: "Цезарь с креветками", price: 150000, desc: "Листья салата, креветки, томаты черри, перепелиные яйца, сухарики, соус «Цезарь»." },
-                    { name: "Цезарь с курицей", price: 130000, desc: "Листья салата, куриное филе, томаты черри, перепелиные яйца, сухарики, соус «Цезарь»." },
-                    { name: "Тайский салат с креветками", price: 150000, desc: "Креветки, авокадо, манго, огурец, болгарский перец, кинза, кунжут, специи." }
+                    { name: "Цезарь с креветками", price: 150000, desc: "Листья салата, креветки, томаты черри, перепелиные яйца, хрустящие сухарики, фирменный соус «Цезарь»." },
+                    { name: "Цезарь с курицей", price: 130000, desc: "Листья салата, куриное филе, томаты черри, перепелиные яйца, хрустящие сухарики, фирменный соус «Цезарь»." },
+                    { name: "Тайский салат с креветками", price: 150000, desc: "Креветки, авокадо, манго, огурец, болгарский перец, кинза, кунжут, специи." },
+                    { name: "Тёплый салат с хрустящим баклажаном", price: 120000, desc: "Хрустящий баклажан, болгарский перец, крем-чиз, кинза, кунжут, специи." }
+                ]
+            },
+            {
+                sectionName: "Холодные закуски",
+                items: [
+                    { name: "Овощное ассорти", price: 70000, desc: "Свежие сезонные овощи и зелень." },
+                    { name: "Сырная тарелка", price: 190000, desc: "Гауда, пармезан, дорблю." },
+                    { name: "Сало с горчицей и хлебом", price: 80000, desc: "Домашнее сало, горчица, свежий хлеб." },
+                    { name: "Закуска под рюмочку", price: 80000, desc: "Огурцы маринованные, домашнее сало, маринованные грибы." }
+                ]
+            },
+            {
+                sectionName: "Горячие блюда",
+                items: [
+                    { name: "Жульен с грибами", price: 80000, desc: "Грибной жульен в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
+                    { name: "Жульен с курицей", price: 90000, desc: "Жульен с курицей в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
+                    { name: "Жульен с креветкой", price: 100000, desc: "Жульен с креветкой в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
+                    { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, помидоры черри, соус тартар, специи." },
+                    { name: "Стейк из тунца", price: 150000, desc: "Стейк тунца, спаржа, брокколи, помидоры черри, соус тартар, специи." },
+                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, соус бешамель, запеченное под сырной шапочкой." },
+                    { name: "Свинина по-французски", price: 160000, desc: "Отбивная свинина на картофельном гратене, помидор, соус бешамель, запеченная под сырной шапочкой." },
+                    { name: "Отварной картофель с малосольной селедочкой", price: 180000, desc: "Картофель, сельдь, маринованный лук." },
+                    { name: "Жареный гребешок с креветкой под азиатским соусом", price: 250000, desc: "Морской гребешок и сочные креветки, обжаренные до золотистой корочки, с ароматным азиатским соусом." }
                 ]
             },
             {
                 sectionName: "Свиные рёбра",
                 items: [
-                    { name: "Свиные рёбра в медово-горчичном соусе", price: 250000, desc: "Томленные 6 часов, соус кетчуп, кисло-сладкий." },
-                    { name: "Свиные рёбра в соусе Терияки", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски, кунжут." }
+                    { name: "Свиные рёбра в медово-горчичном соусе", price: 250000, desc: "Свиные рёбра, томленные в медово-горчичном соусе 6 часов, соус кетчуп, кисло-сладкий." },
+                    { name: "Свиные рёбра в соусе Терияки", price: 250000, desc: "Свиные рёбра, томленные в соусе Терияки 6 часов, картофель по-деревенски, кунжут." },
+                    { name: "Свиные рёбра в соусе Барбекю", price: 250000, desc: "Свиные рёбра, томленные в соусе барбекю 6 часов, картофель по-деревенски." }
+                ]
+            },
+            {
+                sectionName: "Говяжьи рёбра",
+                items: [
+                    { name: "Говяжьи рёбра в медово-горчичном соусе", price: 700000, desc: "Говяжьи рёбра, томленные в медово-горчичном соусе 8 часов, картофель по-деревенски, соус кетчуп и кисло-сладкий." },
+                    { name: "Говяжьи рёбра в соусе Терияки", price: 700000, desc: "Говяжьи рёбра, томленные в соусе Терияки 8 часов, картофель по-деревенски, соус кетчуп и кисло-сладкий, кунжут." },
+                    { name: "Говяжьи рёбра в соусе Барбекю", price: 700000, desc: "Говяжьи рёбра, томленные в соусе барбекю 8 часов, картофель по-деревенски." }
+                ]
+            },
+            {
+                sectionName: "Гарниры",
+                items: [
+                    { name: "Картофель по-деревенски", price: 80000, desc: "Румяные картофельные дольки со специями." },
+                    { name: "Картофель фри", price: 70000, desc: "Хрустящий картофель фри." },
+                    { name: "Нежное гороховое пюре", price: 80000, desc: "Домашнее гороховое пюре с кремовой текстурой." }
+                ]
+            },
+            {
+                sectionName: "Пельмени и вареники",
+                items: [
+                    { name: "Домашние пельмени с говядиной", price: 120000, desc: "Подаются со сметаной. На выбор: в ароматном бульоне или без него." },
+                    { name: "Домашние пельмени со свининой", price: 110000, desc: "Подаются со сметаной. На выбор: в ароматном бульоне или без него." },
+                    { name: "Домашние пельмени с курицей", price: 100000, desc: "Подаются со сметаной. На выбор: в ароматном бульоне или без него." },
+                    { name: "Домашние вареники с картофелем", price: 100000, desc: "Подаются со сметаной. На выбор: в ароматном бульоне или без него." },
+                    { name: "Вареники с лососем, креветкой и сливочным сыром", price: 130000, desc: "Подаются со сметаной. На выбор: в ароматном бульоне или без него." }
+                ]
+            },
+            {
+                sectionName: "Закуски к пиву",
+                items: [
+                    { name: "Копчёная перепёлка (2 шт.)", price: 120000, desc: "Ароматная копченая перепелка." },
+                    { name: "Джерки из говядины", price: 120000, desc: "Сушеное мясо говядины к пиву." },
+                    { name: "Джерки из курицы", price: 100000, desc: "Сушеное куриное мясо к пиву." },
+                    { name: "Джерки из свинины", price: 110000, desc: "Сушеная свинина к пиву." },
+                    { name: "Скумбрия холодного копчения", price: 180000, desc: "Рыбная закуска холодного копчения." },
+                    { name: "Филе сибаса холодного копчения (50 г)", price: 120000, desc: "Филе сибаса." },
+                    { name: "Мойва холодного копчения", price: 120000, desc: "Мойва копченая." }
+                ]
+            },
+            {
+                sectionName: "Десерты",
+                items: [
+                    { name: "Наполеон", price: 70000, desc: "Нежные слоёные коржи с заварным кремом." },
+                    { name: "Медовик", price: 70000, desc: "Медовые коржи с нежным сметанным кремом." },
+                    { name: "Классический чизкейк", price: 70000, desc: "Нежный сливочный чизкейк на песочной основе." }
+                ]
+            },
+            {
+                sectionName: "Крепкие напитки",
+                items: [
+                    { name: "Водка Абсолют (40 г)", price: 60000, desc: "Крепкий алкогольный напиток." },
+                    { name: "Водка Абсолют (100 г)", price: 130000, desc: "Крепкий алкогольный напиток." },
+                    { name: "Водка Смирнов (40 г)", price: 50000, desc: "Крепкий алкогольный напиток." },
+                    { name: "Водка Смирнов (100 г)", price: 100000, desc: "Крепкий алкогольный напиток." },
+                    { name: "Ром Бакарди (50 г)", price: 80000, desc: "Ром." },
+                    { name: "Ром Бакарди (100 г)", price: 150000, desc: "Ром." },
+                    { name: "Виски Балантайс (50 г)", price: 80000, desc: "Шотландский виски." },
+                    { name: "Виски Балантайс (100 г)", price: 150000, desc: "Шотландский виски." },
+                    { name: "Джек Дэниелс (50 г)", price: 80000, desc: "Американский виски." },
+                    { name: "Коньяк Лезгинка (40 г)", price: 80000, desc: "Коньяк." },
+                    { name: "Коньяк Лезгинка (100 г)", price: 160000, desc: "Коньяк." },
+                    { name: "Джин Лондон (50 г)", price: 80000, desc: "Джин." },
+                    { name: "Ликер Егермейстер (50 г)", price: 90000, desc: "Травяной ликер." },
+                    { name: "Мартини (50 г)", price: 80000, desc: "Вермут." }
+                ]
+            },
+            {
+                sectionName: "Вино (Чили)",
+                items: [
+                    { name: "Вино красное сухое (Чили, 150 г)", price: 120000, desc: "Красное сухое вино порционно." },
+                    { name: "Вино белое сухое (Чили, 150 г)", price: 120000, desc: "Белое сухое вино порционно." },
+                    { name: "Вино красное сухое (Чили, 750 мл)", price: 400000,- desc: "Бутылка красного сухого вина." },
+                    { name: "Вино белое сухое (Чили, 750 мл)", price: 400000, desc: "Бутылка белого сухого вина." }
+                ]
+            },
+            {
+                sectionName: "Коктейли",
+                items: [
+                    { name: "Aperol Spritz (Апероль Шприц)", price: 140000, desc: "Классический освежающий коктейль." },
+                    { name: "Gin Tonik (Джин Тоник)", price: 140000, desc: "Джин, тоник, лайм." },
+                    { name: "Cuba Libre (Куба Либре)", price: 140000, desc: "Ром, кола, лайм." },
+                    { name: "Mojito (Мохито)", price: 140000, desc: "Ром, мята, лайм, содовая, сахар." },
+                    { name: "Pina Colada (Пина Колада)", price: 140000, desc: "Ром, кокосовое молоко, ананасовый сок." },
+                    { name: "Margarita (Маргарита)", price: 140000, desc: "Текила, трипл сек, лаймовый сок." },
+                    { name: "Negroni (Негрони)", price: 140000, desc: "Джин, красный вермут, кампари." },
+                    { name: "Daiquiri (Дайкири)", price: 140000, desc: "Ром, лаймовый сок, сахарный сироп." },
+                    { name: "Long island (Лонг Айленд)", price: 140000, desc: "Крепкий микс из водки, джина, текилы, рома, трипл сека и колы." },
+                    { name: "Midori Sour", price: 140000, desc: "Дынный ликер, кислый микс." },
+                    { name: "Rose Cola", price: 140000, desc: "Коктейль с колой." },
+                    { name: "Whiskey Sour", price: 140000, desc: "Виски, лимонный сок, сахар." },
+                    { name: "Rum Sour", price: 140000, desc: "Ром, лимонный сок, сахар." },
+                    { name: "Tequila Sour", price: 140000, desc: "Текила, лимонный сок, сахар." },
+                    { name: "Basil Smash", price: 140000, desc: "Джин, базилик, лимонный сок." },
+                    { name: "Blue Laguna (Блю Лагуна)", price: 140000, desc: "Водка, блю кюрасао, спрайт." }
+                ]
+            },
+            {
+                sectionName: "Безалкогольные коктейли",
+                items: [
+                    { name: "Безалкогольная Пина Колада", price: 80000, desc: "Кокосовое молоко, ананасовый сок." },
+                    { name: "Безалкогольный Мохито", price: 80000, desc: "Мята, лайм, спрайт, сахар." }
                 ]
             },
             {
                 sectionName: "Напитки",
                 items: [
-                    { name: "Свежевыжатый сок из манго", price: 60000, desc: "100% спелое вьетнамское манго со льдом." },
-                    { name: "Кокос свежий холодный", price: 40000, desc: "Натуральный кокосовый сок прямо в орехе." },
-                    { name: "Лимонад классический", price: 45000, desc: "Лимонный фреш, мята, сахарный сироп, газированная вода." },
-                    { name: "Холодный чай с жасмином", price: 35000, desc: "Заварной жасминовый чай, лед." }
+                    { name: "Coca Cola, Fanta, Sprite", price: 25000, desc: "Газированный напиток в баночке." },
+                    { name: "Schweppes (серый, желтый, красный)", price: 25000, desc: "Швепс." },
+                    { name: "Чай в бутылках холодный", price: 25000, desc: "Холодный бутилированный чай." },
+                    { name: "Вода содовая газированная", price: 25000, desc: "Содовая." },
+                    { name: "Вода без газа", price: 15000, desc: "Питьевая вода." },
+                    { name: "Минеральная вода Боржоми", price: 85000, desc: "Грузинская минеральная вода." },
+                    { name: "Домашний компот Ананасовый (300 мл)", price: 20000, desc: "Натуральный ананасовый компот." },
+                    { name: "Домашний компот Яблочный (300 мл)", price: 20000, desc: "Натуральный яблочный компот." },
+                    { name: "Сок Томатный (200 мл)", price: 30000, desc: "Томатный сок." },
+                    { name: "Сок Апельсиновый (200 мл)", price: 30000, desc: "Апельсиновый сок." },
+                    { name: "Сок Вишнёвый (200 мл)", price: 30000, desc: "Вишнёвый сок." },
+                    { name: "Сок Ананасовый (200 мл)", price: 30000, desc: "Ананасовый сок." },
+                    { name: "Сок Яблочный (200 мл)", price: 30000, desc: "Яблочный сок." }
+                ]
+            },
+            {
+                sectionName: "Кофе и чай",
+                items: [
+                    { name: "Эспрессо", price: 40000, desc: "Классический крепкий кофе." },
+                    { name: "Капучино", price: 45000, desc: "Кофе с молочной пенкой." },
+                    { name: "Латте", price: 50000, desc: "Мягкий кофейный напиток с молоком." },
+                    { name: "Чайник чёрного чая (350 мл)", price: 50000, desc: "Заварной чёрный чай." },
+                    { name: "Чайник чёрного чая с фруктами (350 мл)", price: 70000, desc: "Чёрный чай с добавлением свежих фруктов." },
+                    { name: "Чайник чёрного чая (600 мл)", price: 65000, desc: "Большой чайник чёрного чая." },
+                    { name: "Чайник чёрного чая с фруктами (600 мл)", price: 90000, desc: "Большой чайник чёрного чая с фруктами." },
+                    { name: "Чайник зелёного чая (350 мл)", price: 50000, desc: "Заварной зелёный чай." },
+                    { name: "Чайник зелёного чая (600 мл)", price: 65000, desc: "Большой чайник зелёного чая." }
                 ]
             }
         ];
@@ -797,7 +930,7 @@
             if (!alternative) alternative = category.items[0];
 
             document.getElementById('stopModalText').innerHTML = `Блюдо <b>«${dishName}»</b> временно на стоп-листе.<br>Рекомендуем попробовать похожее:`;
-            document.getElementById('alternativeItemContainer').innerHTML = `${alternative.name} — ${alternative.price.toLocaleString()} đ`;
+            document.getElementById('alternativeItemContainer').innerHTML = `${alternative.name} — ${alternative.price.toLocaleString()} VND`;
             document.getElementById('stopModal').style.display = 'flex';
         }
 
@@ -922,7 +1055,7 @@
                             ${adminControls}
                         </div>
                         <div class="food-right-column">
-                            <div class="food-price">${item.price.toLocaleString()} đ</div>
+                            <div class="food-price">${item.price.toLocaleString()} VND</div>
                             ${!isStopped ? `
                             <div class="counter-controls" onclick="event.stopPropagation()">
                                 <button class="counter-btn" onclick="changeQuantity('${item.name}', ${item.price}, -1)">−</button>
@@ -1006,10 +1139,10 @@
                         <div class="food-card-top">
                             <div class="food-details">
                                 <div class="food-title">${item.name}</div>
-                                <div style="font-size:12px; color:var(--text-muted)">${item.price.toLocaleString()} đ × ${item.quantity}</div>
+                                <div style="font-size:12px; color:var(--text-muted)">${item.price.toLocaleString()} VND × ${item.quantity}</div>
                             </div>
                             <div class="food-right-column">
-                                <div class="food-price">${(item.price * item.quantity).toLocaleString()} đ</div>
+                                <div class="food-price">${(item.price * item.quantity).toLocaleString()} VND</div>
                                 <div class="counter-controls">
                                     <button class="counter-btn" onclick="updateCartItemQty(${index}, -1)">−</button>
                                     <span class="counter-value">${item.quantity}</span>
@@ -1021,7 +1154,7 @@
                 `;
             }).join('');
 
-            document.getElementById('cart-total-price').innerText = total.toLocaleString() + ' đ';
+            document.getElementById('cart-total-price').innerText = total.toLocaleString() + ' VND';
             summarySection.style.display = 'block';
         }
 
@@ -1057,7 +1190,6 @@
                 time: dateStr
             };
 
-            // Передаем данные боту для отправки в группу -1004208823431
             if (tg.initData) {
                 tg.sendData(JSON.stringify(orderPayload));
             } else {
@@ -1092,7 +1224,7 @@
                 <div class="order-history-card">
                     <div class="order-card-header">
                         <span>Заказ #${ord.id}</span>
-                        <span>${ord.total.toLocaleString()} đ</span>
+                        <span>${ord.total.toLocaleString()} VND</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <div class="order-card-date">${ord.date}</div>
