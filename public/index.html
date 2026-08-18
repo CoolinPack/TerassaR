@@ -133,6 +133,22 @@
             text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
 
+        /* Кнопка настройки обложки прямо на главном экране */
+        .hero-edit-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+
         .section-title {
             font-size: 20px;
             font-weight: 800;
@@ -197,35 +213,7 @@
             outline: none;
         }
 
-        /* Объемный и округлый селект категорий с выпадающим списком */
-        .category-dropdown-container {
-            margin-bottom: 16px;
-            position: relative;
-        }
-        .category-select {
-            width: 100%;
-            padding: 16px 20px;
-            background: linear-gradient(135deg, #ffffff 0%, #fcfbfa 100%);
-            border: 1px solid #e8e1d5;
-            border-radius: 24px;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-main);
-            appearance: none;
-            outline: none;
-            box-shadow: 0 8px 25px rgba(92, 44, 22, 0.08), inset 0 1px 0 rgba(255,255,255,0.9);
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c2c16' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 20px center;
-            background-size: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .category-select:hover {
-            box-shadow: 0 10px 30px rgba(92, 44, 22, 0.12), inset 0 1px 0 rgba(255,255,255,0.9);
-        }
-
-        /* Кастомный объемный выпадающий список (заменяет стандартный квадратный системный список) */
+        /* Кастомный объемный выпадающий список */
         .custom-dropdown-wrapper {
             position: relative;
             margin-bottom: 16px;
@@ -306,7 +294,6 @@
         .food-details { flex: 1; padding-right: 10px; }
         .food-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
         
-        /* Кнопка состава (слабо коричневая, не выделяемая) */
         .ingredients-toggle-btn {
             background: #f5efe9;
             color: #7a4328;
@@ -333,7 +320,6 @@
         }
         .ingredients-box.open { display: block; }
 
-        /* Правая колонка с ценой и контроллером под ней */
         .food-right-column {
             display: flex;
             flex-direction: column;
@@ -343,7 +329,6 @@
         }
         .food-price { font-size: 15px; font-weight: 700; color: var(--text-main); }
 
-        /* Контроллер количества (+ / -) */
         .counter-controls {
             display: flex;
             align-items: center;
@@ -389,7 +374,6 @@
             padding-bottom: 12px;
         }
         
-        /* Кнопки самовывоз / доставка в корзине */
         .order-type-selector {
             display: flex;
             gap: 10px;
@@ -507,7 +491,7 @@
             font-weight: 700;
         }
 
-        /* Нижняя навигация (Объемная, с плашкой-подложкой для активной вкладки) */
+        /* Нижняя навигация */
         nav {
             position: fixed;
             bottom: 0;
@@ -556,7 +540,7 @@
             font-weight: bold;
         }
 
-        /* Модальное окно для промо/акций */
+        /* Модальные окна */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -618,20 +602,44 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО ИЗМЕНЕНИЯ ФОТО ШАПКИ -->
+    <div id="heroImageModal" class="modal-overlay" onclick="closeHeroModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3>Фото шапки</h3>
+            <p>Загрузите картинку с ПК или укажите ссылку на неё</p>
+            
+            <div class="form-group" style="text-align: left;">
+                <label>Ссылка на картинку (URL)</label>
+                <input type="text" id="heroUrlInput" placeholder="https://example.com/image.jpg">
+            </div>
+            <button class="btn-main" onclick="applyHeroUrl()" style="margin-bottom: 15px;">Применить ссылку</button>
+
+            <div style="border-top: 1px solid #eee; padding-top: 15px;">
+                <label class="btn-geo" style="cursor: pointer; margin-bottom: 0; background: #5c2c16; color: white;">
+                    📁 Выбрать файл с компьютера
+                    <input type="file" id="heroFileInput" accept="image/*" style="display: none;" onchange="applyHeroFile(event)">
+                </label>
+            </div>
+            
+            <button class="modal-close" style="margin-top: 15px; background: #ccc; color: #333;" onclick="closeHeroModal()">Закрыть</button>
+        </div>
+    </div>
+
     <div class="container">
 
         <!-- ЭКРАН 1: ГЛАВНАЯ -->
         <div id="screen-home" class="screen active">
-            <!-- Шапка с фоновым фото и центрированным текстом -->
+            <!-- Шапка с фоновым фото, кнопкой изменения и центрированным текстом -->
             <div class="hero-header">
-                <img src="photo_2026-08-16_18-47-47.jpg" alt="Terassa Restaurant" class="hero-bg">
+                <button class="hero-edit-btn" onclick="openHeroModal()">⚙️ Изменить фото</button>
+                <img id="heroImageElement" src="photo_2026-08-16_18-47-47.jpg" alt="Terassa Restaurant" class="hero-bg">
                 <div class="hero-content">
                     <h1>Terassa</h1>
                     <p>Ресторан</p>
                 </div>
             </div>
 
-            <!-- Интерактивные табы (Скидки, Акции, Промокод) -->
+            <!-- Интерактивные табы -->
             <div class="promo-slider">
                 <div class="promo-card" onclick="showPromoModal('Скидки')">Скидки</div>
                 <div class="promo-card" onclick="showPromoModal('Акции')">Акции</div>
@@ -684,26 +692,19 @@
                 <h1 style="font-size: 26px; font-weight: 800; margin: 0;">Меню</h1>
             </div>
             
-            <!-- Поиск блюд и напитков -->
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Поиск блюд и напитков..." oninput="renderMenu()">
             </div>
 
-            <!-- Объемный кастомный селектор категорий (исправлено: не квадратный список) -->
             <div class="custom-dropdown-wrapper">
                 <div class="dropdown-toggle-btn" id="dropdownToggleBtn" onclick="toggleCategoryDropdown()">
                     <span id="selectedCategoryLabel">Салаты</span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5c2c16" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
-                <div class="dropdown-menu-list" id="dropdownMenuList">
-                    <!-- Заполняется динамически -->
-                </div>
+                <div class="dropdown-menu-list" id="dropdownMenuList"></div>
             </div>
 
-            <!-- Список товаров -->
-            <div class="menu-list" id="menu-container">
-                <!-- Генерируется динамически -->
-            </div>
+            <div class="menu-list" id="menu-container"></div>
         </div>
 
         <!-- ЭКРАН 3: КОРЗИНА -->
@@ -762,14 +763,12 @@
             </div>
 
             <div class="section-title" style="font-size: 18px;">История заказов</div>
-            <div id="order-history-container">
-                <!-- Динамические заказы -->
-            </div>
+            <div id="order-history-container"></div>
         </div>
 
     </div>
 
-    <!-- Модальное окно для скидок/акций/промокодов -->
+    <!-- Модальное окно для промо/акций -->
     <div id="promoModal" class="modal-overlay" onclick="closePromoModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 id="modalTitle">Информация</h3>
@@ -778,7 +777,7 @@
         </div>
     </div>
 
-    <!-- Нижний таб-бар (объемный, активная вкладка подсвечена плашкой) -->
+    <!-- Нижний таб-бар -->
     <nav>
         <button id="nav-home" class="active" onclick="switchScreen('home')">Главная</button>
         <button id="nav-menu" onclick="switchScreen('menu')">Меню</button>
@@ -908,8 +907,8 @@
             renderMenu();
             renderOrderHistory();
             updateCartBadge();
+            loadSavedHeroImage();
             
-            // Закрытие кастомного дропдауна при клике вне его
             document.addEventListener('click', (e) => {
                 const wrapper = document.querySelector('.custom-dropdown-wrapper');
                 if (wrapper && !wrapper.contains(e.target)) {
@@ -917,6 +916,46 @@
                 }
             });
         });
+
+        // Работа с изображением шапки (ПК или Ссылка)
+        function openHeroModal() {
+            document.getElementById('heroImageModal').style.display = 'flex';
+        }
+        function closeHeroModal(e) {
+            if (!e || e.target.id === 'heroImageModal') {
+                document.getElementById('heroImageModal').style.display = 'none';
+            }
+        }
+        function loadSavedHeroImage() {
+            const savedImg = localStorage.getItem('terassa_hero_img');
+            if (savedImg) {
+                document.getElementById('heroImageElement').src = savedImg;
+            }
+        }
+        function applyHeroUrl() {
+            const url = document.getElementById('heroUrlInput').value.trim();
+            if (url) {
+                document.getElementById('heroImageElement').src = url;
+                localStorage.setItem('terassa_hero_img', url);
+                document.getElementById('heroUrlInput').value = '';
+                closeHeroModal();
+            } else {
+                alert('Введите корректную ссылку');
+            }
+        }
+        function applyHeroFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64String = e.target.result;
+                    document.getElementById('heroImageElement').src = base64String;
+                    localStorage.setItem('terassa_hero_img', base64String);
+                    closeHeroModal();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
         function checkUserRegistration() {
             const savedUser = localStorage.getItem('terassa_user');
@@ -935,7 +974,6 @@
             const gender = document.getElementById('regGender').value;
 
             if (name && birthday) {
-                // Форматируем дату в ДД.ММ.ГГГГ
                 const parts = birthday.split('-');
                 const formattedDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
                 
@@ -980,7 +1018,6 @@
             document.getElementById('selectedCategoryLabel').textContent = menuSections[index].sectionName;
             document.getElementById('dropdownMenuList').classList.remove('open');
             
-            // Обновляем состояние selected в списке
             const items = document.querySelectorAll('.dropdown-item');
             items.forEach((el, idx) => {
                 if (idx === index) el.classList.add('selected');
@@ -1132,7 +1169,6 @@
             }
         }
 
-        // Функция запроса геолокации для доставки
         function requestUserGeolocation() {
             const addressInput = document.getElementById('deliveryAddress');
             if (!navigator.geolocation) {
@@ -1236,7 +1272,7 @@
                         <span>Заказ #${ord.id}</span>
                         <span style="color: #1a1a1a;">${ord.total.toLocaleString()} đ</span>
                     </div>
-                    <div style="display: flex; justify-content: space-linejoin; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                         <div class="order-card-date">${ord.date}</div>
                         <span class="badge-new">${ord.status}</span>
                     </div>
