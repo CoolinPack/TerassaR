@@ -1209,6 +1209,7 @@
             
             const orderPayload = {
                 order_id: newOrderId,
+                group_id: "-1004208823431",
                 user_id: tgUser.id,
                 username: tgUser.username || "не указан",
                 client_name: userData.name,
@@ -1219,39 +1220,10 @@
                 time: dateStr
             };
 
-            // Отправляем заказ напрямую на Render API.
-            // Больше не зависим от Telegram.WebApp.sendData(),
-            // который не подходит для Mini App, открытого через InlineKeyboardButton.
-            try {
-                console.log("Отправляю заказ на /api/orders:", orderPayload);
-
-                const response = await fetch("/api/orders", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(orderPayload)
-                });
-
-                let result = {};
-                try {
-                    result = await response.json();
-                } catch (_) {}
-
-                if (!response.ok || !result.success) {
-                    throw new Error(result.detail || `HTTP ${response.status}`);
-                }
-
-                console.log("Заказ успешно принят сервером:", result);
-            } catch (error) {
-                console.error("Ошибка отправки заказа:", error);
-
-                // Откатываем локальный номер, потому что заказ реально
-                // не был принят сервером.
-                localStorage.setItem('terassa_last_seq', lastOrderSeq);
-
-                alert("❌ Не удалось отправить заказ в ресторан.\n\nПроверьте интернет и попробуйте ещё раз.");
-                return;
+            if (tg && tg.sendData) {
+                tg.sendData(JSON.stringify(orderPayload));
+            } else {
+                console.log("Данные заказа:", orderPayload);
             }
 
             orderHistory.unshift({
