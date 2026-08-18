@@ -1,1 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terassa - Ресторан</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; text-align: center; }
+        h1 { color: #333; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-top: 20px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
 
+    <h1>Terassa 🌿</h1>
+    <p>Итальянская кухня в Нячанге</p>
+
+    <div class="card">
+        <h3>Ваш профиль</h3>
+        <input type="text" id="authName" placeholder="Имя">
+        <input type="text" id="authSurname" placeholder="Фамилия">
+        <button onclick="alert('Данные сохранены!')">Готово</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+
+                const tgUser = tg.initDataUnsafe?.user;
+
+                if (tgUser && tgUser.id) {
+                    // Генерация или получение стабильного UUID устройства
+                    let deviceUuid = localStorage.getItem('terassa_device_uuid');
+                    if (!deviceUuid) {
+                        deviceUuid = 'dev_' + Math.random().toString(36).substring(2) + Date.now();
+                        localStorage.setItem('terassa_device_uuid', deviceUuid);
+                    }
+
+                    // Синхронизация с сервером
+                    fetch('/api/user/sync', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            telegramId: tgUser.id,
+                            username: tgUser.username || '',
+                            firstName: tgUser.first_name || '',
+                            lastName: tgUser.last_name || '',
+                            deviceUuid: deviceUuid
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.firstName) {
+                            const nameInput = document.getElementById('authName');
+                            if (nameInput && !nameInput.value) nameInput.value = data.firstName;
+                        }
+                    })
+                    .catch(err => console.error('Ошибка синхронизации сессии:', err));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
