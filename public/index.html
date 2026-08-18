@@ -89,7 +89,7 @@
             color: var(--text-main);
         }
 
-        /* Шапка с фоновым изображением */
+        /* Шапка с фоновым изображением через CSS */
         .hero-header {
             position: relative;
             border-radius: 20px;
@@ -99,19 +99,9 @@
             margin-bottom: 20px;
             color: white;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        .hero-header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
-            z-index: 1;
-        }
-        .hero-header img.hero-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            z-index: 0;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://i.postimg.cc/ydkq7QYL/header.webp');
+            background-size: cover;
+            background-position: center;
         }
         .hero-content {
             position: relative;
@@ -590,9 +580,8 @@
 
         <!-- ЭКРАН 1: ГЛАВНАЯ -->
         <div id="screen-home" class="screen active">
-            <!-- Шапка с фоновым фото и центрированным текстом (путь к картинке в корне репозитория) -->
+            <!-- Шапка с фоновым изображением по ссылке -->
             <div class="hero-header">
-                <img id="heroImageElement" src="https://i.postimg.cc/ydkq7QYL/header.webp" alt="Terassa Restaurant" class="hero-bg">
                 <div class="hero-content">
                     <h1>Terassa</h1>
                     <p>Ресторан</p>
