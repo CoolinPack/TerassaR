@@ -110,7 +110,10 @@ async def sync_user(data: UserSyncSchema):
 # Инициализация Telegram Бота
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
+
+# Берем ID группы из переменных окружения Render (GROUP_CHAT_ID)
 GROUP_ID = int(os.environ.get("GROUP_CHAT_ID", -1004208823431))
+
 
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
@@ -127,38 +130,28 @@ async def cmd_start(message: types.Message):
       ]
   )
   await message.answer(
-      "Добро пожаловать в ресторан **Terassa**! Нажмите кнопку ниже, чтобы"
-      " открыть меню и сделать заказ:",
+      "Нажмите кнопку ниже, чтобы открыть меню и сделать заказ:",
       reply_markup=keyboard,
-      parse_mode="Markdown",
   )
 
 
 # Обработчик заказов из Mini App (aiogram 3.x)
-# Универсальный обработчик заказов из Mini App
 @dp.message(lambda message: message.web_app_data is not None)
 async def receive_web_app_data(message: types.Message):
   try:
-    # Логируем то, что реально пришло от Mini App (можно посмотреть в логах Render)
-    logging.info(f"Получены данные из WebApp: {message.web_app_data.data}")
-    
     data = json.loads(message.web_app_data.data)
 
-    # Безопасно извлекаем данные (даже если каких-то полей нет, бот не упадет с ошибкой)
     order_id = data.get("order_id", "Не указан")
-    client_name = data.get("client_name", data.get("name", "Клиент"))
+    client_name = data.get("client_name", "Клиент")
     order_type = data.get("type", "delivery")
     type_str = 'Доставка' if order_type == 'delivery' else 'Самовывоз'
     address = data.get("address", "Не указан")
     items = data.get("items", "Состав не передан")
     total = data.get("total", 0)
     time_str = data.get("time", "Не указано")
-    
-    # Куда отправлять: берем из JSON или используем ваш ID группы по умолчанию
-    target_group_id = int(data.get("group_id", -1004208823431))
 
     text = (
-        f"🚨 **Новый заказ #{order_id}!**\n\n"
+        f"🚨 **Новый заказ #{order_id}**\n\n"
         f"👤 **Имя:** {client_name}\n"
         f"🏷 **Тип:** {type_str}\n"
         f"📍 **Адрес:** {address}\n"
@@ -167,10 +160,7 @@ async def receive_web_app_data(message: types.Message):
         f"🕒 **Время:** {time_str}"
     )
 
-    # Отправляем в административную группу
-    await bot.send_message(target_group_id, text, parse_mode="Markdown")
-    
-    # Отвечаем пользователю в чате с ботом
+    await bot.send_message(GROUP_ID, text, parse_mode="Markdown")
     await message.answer(
         f"Спасибо за заказ #{order_id}! Мы уже начали его готовить."
     )
