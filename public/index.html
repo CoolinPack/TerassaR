@@ -27,7 +27,6 @@
         }
 
         .container { padding: 16px; max-width: 600px; margin: 0 auto; }
-
         .screen { display: none; }
         .screen.active { display: block; }
 
@@ -275,7 +274,6 @@
         .counter-btn.plus { background: #5c2c16; color: white; }
         .counter-value { font-size: 14px; font-weight: 700; min-width: 14px; text-align: center; }
 
-        /* Стоп лист бейджики */
         .stop-badge {
             background: #e74c3c;
             color: white;
@@ -302,7 +300,6 @@
             color: #27ae60;
         }
 
-        /* Корзина и Оформление */
         .cart-summary-box {
             background: white;
             border-radius: var(--radius);
@@ -363,7 +360,6 @@
             gap: 6px;
         }
 
-        /* Профиль */
         .profile-card {
             background: white;
             border-radius: var(--radius);
@@ -389,7 +385,6 @@
         .profile-label { color: var(--text-muted); }
         .profile-val { font-weight: 600; }
 
-        /* История заказов со статусами */
         .order-history-card {
             background: white;
             border-radius: var(--radius);
@@ -411,7 +406,7 @@
         .status-cooking { background: #fef3c7; color: #d97706; }
         .status-ready { background: #d4efdf; color: #27ae60; }
 
-        /* Нижняя навигация (Приподнятая, скругленная, утолщенная) */
+        /* Нижняя навигация */
         nav {
             position: fixed;
             bottom: 12px;
@@ -459,7 +454,6 @@
             font-weight: bold;
         }
 
-        /* Модальные окна */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -515,7 +509,7 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО АЛЬТЕРНАТИВЫ ИЗ СТОП-ЛИСТА -->
+    <!-- МОДАЛЬНОЕ ОКНО СТОП-ЛИСТА -->
     <div id="stopModal" class="modal-overlay" onclick="closeStopModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 style="color: #e74c3c;">Блюдо временно на стопе</h3>
@@ -655,7 +649,6 @@
 
     </div>
 
-    <!-- Модалка акций -->
     <div id="promoModal" class="modal-overlay" onclick="closePromoModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 id="modalTitle">Информация</h3>
@@ -676,8 +669,25 @@
     </nav>
 
     <script>
-        // Исходные данные меню с категориями
+        // Полное меню: Первое, Второе, Салаты, Напитки и т.д.
         const menuSections = [
+            {
+                sectionName: "Первые блюда",
+                items: [
+                    { name: "Традиционный Фо Бо", price: 120000, desc: "Наваристый бульон, говядина, рисовая лапша, зелень, специи." },
+                    { name: "Суп Том Ям с креветками", price: 140000, desc: "Острый тайский суп, креветки, грибы, кокосовое молоко, лемонграсс." },
+                    { name: "Куриный суп с лапшой", price: 90000, desc: "Домашний бульон, куриное филе, лапша, перепелиное яйцо." }
+                ]
+            },
+            {
+                sectionName: "Вторые блюда",
+                items: [
+                    { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, черри, соус тартар." },
+                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, сырная шапочка." },
+                    { name: "Жульен с курицей", price: 90000, desc: "Куриное филе, грибы, сливочный соус, сыр." },
+                    { name: "Жульен с креветкой", price: 100000, desc: "Тигровые креветки, сливочный соус, сыр." }
+                ]
+            },
             {
                 sectionName: "Салаты",
                 items: [
@@ -688,46 +698,35 @@
                 ]
             },
             {
-                sectionName: "Горячие блюда",
-                items: [
-                    { name: "Жульен с курицей", price: 90000, desc: "Куриное филе, грибы, сливочный соус, сыр." },
-                    { name: "Жульен с креветкой", price: 100000, desc: "Тигровые креветки, сливочный соус, сыр." },
-                    { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, черри, соус тартар." },
-                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, сырная шапочка." }
-                ]
-            },
-            {
                 sectionName: "Свиные рёбра",
                 items: [
                     { name: "Свиные рёбра в медово-горчичном соусе", price: 250000, desc: "Томленные 6 часов, соус кетчуп, кисло-сладкий." },
                     { name: "Свиные рёбра в соусе Терияки", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски, кунжут." }
                 ]
+            },
+            {
+                sectionName: "Напитки",
+                items: [
+                    { name: "Свежевыжатый сок из манго", price: 60000, desc: "100% спелое вьетнамское манго со льдом." },
+                    { name: "Кокос свежий холодный", price: 40000, desc: "Натуральный кокосовый сок прямо в орехе." },
+                    { name: "Лимонад классический", price: 45000, desc: "Лимонный фреш, мята, сахарный сироп, газированная вода." },
+                    { name: "Холодный чай с жасмином", price: 35000, desc: "Заварной жасминовый чай, лед." }
+                ]
             }
         ];
 
         let cart = [];
-        let stopList = []; // Массив названий блюд на стопе
+        let stopList = [];
         let isAdmin = false;
-        
-        // Пример заказов с синхронизируемыми статусами
-        let orderHistory = [
-            { 
-                id: 104, 
-                date: "18.08.2026, 17:02:35", 
-                total: 240000, 
-                status: "Готов / Передан курьеру", 
-                statusCode: "ready",
-                itemsStr: "Цезарь с курицей × 1, Жульен с курицей × 1",
-                type: "delivery",
-                address: "Широта: 12.2388, Долгота: 109.1967 (GPS)"
-            }
-        ];
-        
+        let orderHistory = [];
         let currentOrderType = 'pickup';
         let selectedCategoryIndex = 0;
         let userData = { name: "Арсен", birthday: "30.09.2002", gender: "Мужской" };
 
+        const tg = window.Telegram.WebApp;
+
         document.addEventListener('DOMContentLoaded', () => {
+            tg.expand();
             checkUserRegistration();
             initCustomDropdown();
             renderMenu();
@@ -783,7 +782,6 @@
             renderMenu();
         }
 
-        // Админ-функция: поставить/убрать с стоп-листа
         function toggleStopListItem(dishName) {
             if (stopList.includes(dishName)) {
                 stopList = stopList.filter(item => item !== dishName);
@@ -793,12 +791,10 @@
             renderMenu();
         }
 
-        // Поиск похожего блюда из той же категории при клике на стоп-блюдо
         function handleStopItemClick(dishName, categoryName) {
             const category = menuSections.find(sec => sec.sectionName === categoryName);
             let alternative = category.items.find(i => i.name !== dishName && !stopList.includes(i.name));
-            
-            if (!alternative) alternative = category.items[0]; // fallback
+            if (!alternative) alternative = category.items[0];
 
             document.getElementById('stopModalText').innerHTML = `Блюдо <b>«${dishName}»</b> временно на стоп-листе.<br>Рекомендуем попробовать похожее:`;
             document.getElementById('alternativeItemContainer').innerHTML = `${alternative.name} — ${alternative.price.toLocaleString()} đ`;
@@ -876,7 +872,6 @@
             let html = '';
 
             if (searchQuery !== '') {
-                // Поиск по всему меню с указанием категории
                 menuSections.forEach(section => {
                     section.items.forEach(item => {
                         if (item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery)) {
@@ -979,7 +974,7 @@
         function requestUserGeolocation() {
             const addressInput = document.getElementById('deliveryAddress');
             if (!navigator.geolocation) {
-                alert('Геолокация не поддерживается');
+                alert('Геолокация не поддерживается устройством');
                 return;
             }
             addressInput.placeholder = 'Определение координат GPS...';
@@ -989,7 +984,7 @@
                     const lon = pos.coords.longitude.toFixed(6);
                     addressInput.value = `Широта: ${lat}, Долгота: ${lon} (GPS)`;
                 },
-                () => { alert('Не удалось получить геолокацию.'); }
+                () => { alert('Не удалось получить геолокацию. Разрешите доступ в настройках.'); }
             );
         }
 
@@ -1037,7 +1032,7 @@
             updateCartBadge();
         }
 
-        // Оформление заказа (отправка заявки в группу -1004208823431)
+        // Отправка заказа в группу -1004208823431
         function checkout() {
             let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             let itemsStr = cart.map(i => `${i.name} × ${i.quantity}`).join(', ');
@@ -1047,8 +1042,27 @@
             const now = new Date();
             const dateStr = now.toLocaleDateString('ru-RU') + ', ' + now.toLocaleTimeString('ru-RU');
 
-            // Симулируем отправку в группу ID: -1004208823431
-            console.log(`[Telegram Group -1004208823431] Новый заказ #${newOrderId} от пользователя ID: 123456 (${userData.name}). Способ: ${currentOrderType}. Адрес/Локация: ${address}. Сумма: ${total} đ. Состав: ${itemsStr}`);
+            const tgUser = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : { id: "Гость", username: "Нет username" };
+            
+            const orderPayload = {
+                order_id: newOrderId,
+                group_id: "-1004208823431",
+                user_id: tgUser.id,
+                username: tgUser.username || "не указан",
+                client_name: userData.name,
+                type: currentOrderType,
+                address: address,
+                total: total,
+                items: itemsStr,
+                time: dateStr
+            };
+
+            // Передаем данные боту для отправки в группу -1004208823431
+            if (tg.initData) {
+                tg.sendData(JSON.stringify(orderPayload));
+            } else {
+                console.log("Заказ отправлен в группу -1004208823431:", orderPayload);
+            }
 
             orderHistory.unshift({
                 id: newOrderId,
@@ -1061,7 +1075,7 @@
                 address: address
             });
 
-            alert(`Заказ #${newOrderId} успешно оформлен и отправлен в ресторан!`);
+            alert(`Заказ #${newOrderId} успешно оформлен!`);
             cart = [];
             updateCartBadge();
             switchScreen('profile');
