@@ -9,8 +9,6 @@
         :root {
             --primary: #5c2c16;
             --primary-light: #7a3d20;
-            --accent: #5c2c16;
-            --accent-gradient: #5c2c16;
             --bg-color: #f7f4ee;
             --card-bg: #ffffff;
             --text-main: #1a1a1a;
@@ -34,23 +32,48 @@
         .screen { display: none; }
         .screen.active { display: block; }
 
-        /* Шапка бренда / Заголовки */
-        .brand-header {
-            margin-bottom: 16px;
+        /* Шапка с фоновым изображением и центрированным текстом */
+        .hero-header {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
-        .brand-header h1 {
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+            z-index: 1;
+        }
+        .hero-header img.hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .hero-header h1 {
             margin: 0;
-            font-size: 26px;
+            font-size: 32px;
             font-weight: 800;
-            color: #1a1a1a;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
-        .brand-header p {
-            margin: 2px 0 0 0;
-            font-size: 13px;
-            color: var(--text-muted);
+        .hero-header p {
+            margin: 6px 0 0 0;
+            font-size: 14px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
 
         .section-title {
@@ -60,7 +83,7 @@
             color: #1a1a1a;
         }
 
-        /* Выпуклые табы на главной (как на скрине 3) */
+        /* Кликабельные табы на главной */
         .promo-slider {
             display: flex;
             gap: 10px;
@@ -77,6 +100,11 @@
             font-weight: 700;
             font-size: 14px;
             border: 1px solid rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .promo-card:active {
+            transform: scale(0.97);
         }
 
         /* Карточки популярных блюд */
@@ -93,6 +121,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
         }
         .popular-info h5 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: var(--text-main); }
         .popular-info .price { font-size: 14px; color: var(--text-main); font-weight: 700; }
@@ -116,44 +145,93 @@
             outline: none;
         }
 
-        /* Выпадающий список категорий */
+        /* Объемная, плавная и округлая шторка категорий */
         .category-dropdown-container {
             margin-bottom: 16px;
             position: relative;
         }
         .category-select {
             width: 100%;
-            padding: 14px 16px;
-            background: white;
-            border: 1px solid #e2dacd;
-            border-radius: var(--radius);
-            font-size: 15px;
-            font-weight: 600;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #fcfbfa 100%);
+            border: 1px solid #e8e1d5;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 700;
             color: var(--text-main);
             appearance: none;
             outline: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            box-shadow: 0 6px 20px rgba(92, 44, 22, 0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c2c16' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 18px;
+            background-position: right 20px center;
+            background-size: 20px;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .category-select:hover {
+            box-shadow: 0 8px 25px rgba(92, 44, 22, 0.1), inset 0 1px 0 rgba(255,255,255,0.8);
         }
 
-        /* Карточки блюд в меню со счетчиком */
+        /* Карточки блюд в меню */
         .menu-list { display: flex; flex-direction: column; gap: 10px; }
         .food-card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 14px 16px;
+            padding: 16px;
             box-shadow: var(--shadow);
             display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .food-card-top {
+            display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
         }
         .food-details { flex: 1; padding-right: 10px; }
         .food-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-        .food-price { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
-        .food-desc { font-size: 12px; color: var(--text-muted); }
+        .food-price { font-size: 15px; font-weight: 700; color: var(--text-main); }
+        
+        /* Кнопка состава (слабо коричневая, не выделяемая) */
+        .ingredients-toggle-btn {
+            background: #f5efe9;
+            color: #7a4328;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 6px;
+            display: inline-block;
+            user-select: none;
+            transition: background 0.15s;
+        }
+        .ingredients-toggle-btn:hover {
+            background: #ebdcd0;
+        }
+        .ingredients-box {
+            font-size: 13px;
+            color: var(--text-muted);
+            background: #faf8f5;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 4px;
+            display: none;
+        }
+        .ingredients-box.open {
+            display: block;
+        }
+
+        /* Правая колонка с ценой и контроллером под ней */
+        .food-right-column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 8px;
+        }
 
         /* Контроллер количества (+ / -) */
         .counter-controls {
@@ -161,16 +239,16 @@
             align-items: center;
             background: #f3efe6;
             border-radius: 12px;
-            padding: 4px;
-            gap: 8px;
+            padding: 3px;
+            gap: 6px;
         }
         .counter-btn {
             background: white;
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -184,9 +262,9 @@
             color: white;
         }
         .counter-value {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            min-width: 16px;
+            min-width: 14px;
             text-align: center;
         }
 
@@ -308,7 +386,7 @@
             font-weight: 700;
         }
 
-        /* Нижняя навигация */
+        /* Нижняя навигация (без эмодзи) */
         nav {
             position: fixed;
             bottom: 0;
@@ -317,7 +395,7 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 12px 0;
             border-top: 1px solid #eee;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
             z-index: 100;
@@ -326,20 +404,18 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 11px;
+            font-size: 13px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
             cursor: pointer;
             font-weight: 500;
         }
         nav button.active { color: #5c2c16; font-weight: bold; }
-        nav button span { font-size: 18px; }
 
         .badge-cart-count {
             position: absolute;
-            top: 2px;
+            top: 4px;
             right: 28%;
             background: #e74c3c;
             color: white;
@@ -347,6 +423,39 @@
             padding: 1px 5px;
             font-size: 10px;
             font-weight: bold;
+        }
+
+        /* Модальное окно для промо/акций */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            max-width: 320px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .modal-content h3 { margin-top: 0; font-size: 18px; color: #5c2c16; }
+        .modal-content p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+        .modal-close {
+            background: #5c2c16;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
         }
     </style>
 </head>
@@ -356,16 +465,20 @@
 
         <!-- ЭКРАН 1: ГЛАВНАЯ -->
         <div id="screen-home" class="screen active">
-            <div class="brand-header" style="margin-top: 5px;">
-                <h1>Terassa</h1>
-                <p>Ресторан</p>
+            <!-- Шапка с фоновым фото и центрированным текстом -->
+            <div class="hero-header">
+                <img src="photo_2026-08-16_18-47-47.jpg" alt="Terassa Restaurant" class="hero-bg">
+                <div class="hero-content">
+                    <h1>Terassa</h1>
+                    <p>Ресторан</p>
+                </div>
             </div>
 
-            <!-- Табы сверху главной -->
+            <!-- Интерактивные табы (Скидки, Акции, Промокод) -->
             <div class="promo-slider">
-                <div class="promo-card">Скидки</div>
-                <div class="promo-card">Акции</div>
-                <div class="promo-card">Промокод</div>
+                <div class="promo-card" onclick="showPromoModal('Скидки')">Скидки</div>
+                <div class="promo-card" onclick="showPromoModal('Акции')">Акции</div>
+                <div class="promo-card" onclick="showPromoModal('Промокод')">Промокод</div>
             </div>
 
             <div class="section-title" style="font-size: 18px;">Популярные блюда сегодня</div>
@@ -410,17 +523,16 @@
 
         <!-- ЭКРАН 2: МЕНЮ -->
         <div id="screen-menu" class="screen">
-            <div class="brand-header">
-                <p>Меню</p>
-                <h1>Выберите блюдо</h1>
+            <div class="brand-header" style="margin-bottom: 16px;">
+                <h1 style="font-size: 26px; font-weight: 800; margin: 0;">Меню</h1>
             </div>
             
-            <!-- Поисковик -->
+            <!-- Поиск блюд и напитков -->
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Поиск блюда или ингредиента..." oninput="renderMenu()">
+                <input type="text" id="searchInput" placeholder="Поиск блюд и напитков..." oninput="renderMenu()">
             </div>
 
-            <!-- Выпадающий список категорий -->
+            <!-- Плавная, объемная и округлая шторка категорий -->
             <div class="category-dropdown-container">
                 <select id="categorySelect" class="category-select" onchange="renderMenu()">
                     <!-- Заполняется динамически -->
@@ -435,9 +547,8 @@
 
         <!-- ЭКРАН 3: КОРЗИНА -->
         <div id="screen-cart" class="screen">
-            <div class="brand-header">
-                <p>Корзина</p>
-                <h1>Ваш заказ</h1>
+            <div class="brand-header" style="margin-bottom: 16px;">
+                <h1 style="font-size: 26px; font-weight: 800; margin: 0;">Корзина</h1>
             </div>
 
             <div id="cart-items" style="margin-bottom: 15px;">
@@ -446,7 +557,6 @@
 
             <div id="cart-summary-section" style="display: none;">
                 <div class="cart-summary-box">
-                    <!-- Выбор типа заказа: Самовывоз / Доставка прямо в блоке заказа -->
                     <div style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Способ получения</div>
                     <div class="order-type-selector">
                         <button class="order-type-btn active" id="type-pickup" onclick="setOrderType('pickup')">Заберу с собой</button>
@@ -499,25 +609,27 @@
 
     </div>
 
-    <!-- Нижний таб-бар -->
+    <!-- Модальное окно для скидок/акций/промокодов -->
+    <div id="promoModal" class="modal-overlay" onclick="closePromoModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 id="modalTitle">Информация</h3>
+            <p id="modalText">Скоро тут появятся...</p>
+            <button class="modal-close" onclick="closePromoModal()">Понятно</button>
+        </div>
+    </div>
+
+    <!-- Нижний таб-бар без эмодзи -->
     <nav>
-        <button id="nav-home" class="active" onclick="switchScreen('home')">
-            <span>🏠</span>Главная
-        </button>
-        <button id="nav-menu" onclick="switchScreen('menu')">
-            <span>📖</span>Меню
-        </button>
+        <button id="nav-home" class="active" onclick="switchScreen('home')">Главная</button>
+        <button id="nav-menu" onclick="switchScreen('menu')">Меню</button>
         <button id="nav-cart" onclick="switchScreen('cart')" style="position: relative;">
-            <span>🛒</span>Корзина
+            Корзина
             <div id="cartBadge" class="badge-cart-count" style="display: none;">0</div>
         </button>
-        <button id="nav-profile" onclick="switchScreen('profile')">
-            <span>👤</span>Профиль
-        </button>
+        <button id="nav-profile" onclick="switchScreen('profile')">Профиль</button>
     </nav>
 
     <script>
-        // Меню ресторана со всеми категориями и блюдами
         const menuSections = [
             {
                 sectionName: "Салаты",
@@ -541,9 +653,9 @@
             {
                 sectionName: "Горячие блюда",
                 items: [
-                    { name: "Жульен с грибами", price: 80000, desc: "Состав" },
-                    { name: "Жульен с курицей", price: 90000, desc: "Состав" },
-                    { name: "Жульен с креветкой", price: 100000, desc: "Состав" },
+                    { name: "Жульен с грибами", price: 80000, desc: "Нежные грибы под запеченной сырной корочкой." },
+                    { name: "Жульен с курицей", price: 90000, desc: "Куриное филе, грибы, сливочный соус, сыр." },
+                    { name: "Жульен с креветкой", price: 100000, desc: "Тигровые креветки, сливочный соус, сыр." },
                     { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, черри, соус тартар." },
                     { name: "Стейк из тунца", price: 150000, desc: "Стейк тунца, спаржа, брокколи, черри, соус тартар." },
                     { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, сырная шапочка." },
@@ -627,9 +739,8 @@
             { id: 3, date: "18.08.2026, 17:02:35", total: 340000, status: "Новый", itemsStr: "Жульен с курицей × 1, Жульен с креветкой × 1, Лосось на гриле × 1" },
             { id: 2, date: "18.08.2026, 17:00:30", total: 340000, status: "Новый", itemsStr: "Жульен с курицей × 1, Жульен с креветкой × 1, Лосось на гриле × 1" }
         ];
-        let currentOrderType = 'pickup'; // 'pickup' или 'delivery'
+        let currentOrderType = 'pickup';
 
-        // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', () => {
             initCategoryDropdown();
             renderMenu();
@@ -637,7 +748,6 @@
             updateCartBadge();
         });
 
-        // Заполнение селекта категорий
         function initCategoryDropdown() {
             const select = document.getElementById('categorySelect');
             select.innerHTML = '';
@@ -649,7 +759,6 @@
             });
         }
 
-        // Переключение экранов
         function switchScreen(screenName) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -668,7 +777,6 @@
 
         function openMenuAndSelect(dishName) {
             switchScreen('menu');
-            // Найти к какому разделу принадлежит блюдо и выбрать его
             for (let i = 0; i < menuSections.length; i++) {
                 const found = menuSections[i].items.find(item => item.name === dishName);
                 if (found) {
@@ -680,7 +788,27 @@
             renderMenu();
         }
 
-        // Рендеринг меню с учетом поиска и выбранной категории из выпадающего списка
+        // Логика модального окна для акций/скидок/промокодов
+        function showPromoModal(type) {
+            const modal = document.getElementById('promoModal');
+            const title = document.getElementById('modalTitle');
+            const text = document.getElementById('modalText');
+
+            title.textContent = type;
+            if (type === 'Скидки') {
+                text.textContent = 'Скоро тут появятся скидки!';
+            } else if (type === 'Акции') {
+                text.textContent = 'Скоро тут появятся акции!';
+            } else if (type === 'Промокод') {
+                text.textContent = 'Скоро тут появятся промокоды!';
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closePromoModal() {
+            document.getElementById('promoModal').style.display = 'none';
+        }
+
         function renderMenu() {
             const container = document.getElementById('menu-container');
             const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -688,7 +816,6 @@
 
             let html = '';
 
-            // Если есть поисковый запрос, ищем по всем категориям
             if (searchQuery !== '') {
                 menuSections.forEach(section => {
                     section.items.forEach(item => {
@@ -698,7 +825,6 @@
                     });
                 });
             } else {
-                // Иначе показываем выбранную категорию из селекта
                 const section = menuSections[selectedCatIndex];
                 if (section) {
                     section.items.forEach(item => {
@@ -717,24 +843,34 @@
         function createFoodCardHtml(item) {
             const cartItem = cart.find(i => i.name === item.name);
             const qty = cartItem ? cartItem.quantity : 0;
+            const uniqueId = 'ing_' + item.name.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
 
             return `
                 <div class="food-card">
-                    <div class="food-details">
-                        <div class="food-title">${item.name}</div>
-                        <div class="food-price">${item.price.toLocaleString()} đ</div>
-                        <div class="food-desc">${item.desc}</div>
+                    <div class="food-card-top">
+                        <div class="food-details">
+                            <div class="food-title">${item.name}</div>
+                            <button class="ingredients-toggle-btn" onclick="toggleIngredients('${uniqueId}')">состав</button>
+                        </div>
+                        <div class="food-right-column">
+                            <div class="food-price">${item.price.toLocaleString()} đ</div>
+                            <div class="counter-controls">
+                                <button class="counter-btn" onclick="changeQuantity('${item.name}', ${item.price}, -1)">−</button>
+                                <span class="counter-value">${qty}</span>
+                                <button class="counter-btn plus" onclick="changeQuantity('${item.name}', ${item.price}, 1)">+</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="counter-controls">
-                        <button class="counter-btn" onclick="changeQuantity('${item.name}', ${item.price}, -1)">−</button>
-                        <span class="counter-value">${qty}</span>
-                        <button class="counter-btn plus" onclick="changeQuantity('${item.name}', ${item.price}, 1)">+</button>
-                    </div>
+                    <div id="${uniqueId}" class="ingredients-box">${item.desc}</div>
                 </div>
             `;
         }
 
-        // Изменение количества товара (+ / -)
+        function toggleIngredients(id) {
+            const box = document.getElementById(id);
+            box.classList.toggle('open');
+        }
+
         function changeQuantity(name, price, delta) {
             const existing = cart.find(i => i.name === name);
             if (existing) {
@@ -761,7 +897,6 @@
             }
         }
 
-        // Выбор Самовывоз / Доставка в корзине
         function setOrderType(type) {
             currentOrderType = type;
             document.getElementById('type-pickup').classList.remove('active');
@@ -776,7 +911,6 @@
             }
         }
 
-        // Рендеринг корзины
         function renderCart() {
             const container = document.getElementById('cart-items');
             const summarySection = document.getElementById('cart-summary-section');
@@ -792,14 +926,19 @@
                 total += item.price * item.quantity;
                 return `
                     <div class="food-card" style="margin-bottom: 10px;">
-                        <div class="food-details">
-                            <div class="food-title">${item.name}</div>
-                            <div class="food-price">${(item.price * item.quantity).toLocaleString()} đ <span style="font-size:12px; color:var(--text-muted)">× ${item.quantity}</span></div>
-                        </div>
-                        <div class="counter-controls">
-                            <button class="counter-btn" onclick="updateCartItemQty(${index}, -1)">−</button>
-                            <span class="counter-value">${item.quantity}</span>
-                            <button class="counter-btn plus" onclick="updateCartItemQty(${index}, 1)">+</button>
+                        <div class="food-card-top">
+                            <div class="food-details">
+                                <div class="food-title">${item.name}</div>
+                                <div style="font-size:12px; color:var(--text-muted)">${item.price.toLocaleString()} đ × ${item.quantity}</div>
+                            </div>
+                            <div class="food-right-column">
+                                <div class="food-price">${(item.price * item.quantity).toLocaleString()} đ</div>
+                                <div class="counter-controls">
+                                    <button class="counter-btn" onclick="updateCartItemQty(${index}, -1)">−</button>
+                                    <span class="counter-value">${item.quantity}</span>
+                                    <button class="counter-btn plus" onclick="updateCartItemQty(${index}, 1)">+</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -818,7 +957,6 @@
             updateCartBadge();
         }
 
-        // Оформление заказа (без каких-либо пометок про username)
         function checkout() {
             let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             let itemsStr = cart.map(i => `${i.name} × ${i.quantity}`).join(', ');
@@ -841,7 +979,6 @@
             switchScreen('profile');
         }
 
-        // Рендеринг истории заказов в профиле
         function renderOrderHistory() {
             const container = document.getElementById('order-history-container');
             if (orderHistory.length === 0) {
