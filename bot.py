@@ -113,6 +113,7 @@ dp = Dispatcher()
 
 # Берем ID группы из переменных окружения Render (GROUP_CHAT_ID)
 GROUP_ID = int(os.environ.get("GROUP_CHAT_ID", -1004208823431))
+logging.info(f"GROUP_ID установлен: {GROUP_ID}")
 
 
 @dp.message(CommandStart())
@@ -138,8 +139,10 @@ async def cmd_start(message: types.Message):
 # Обработчик заказов из Mini App (aiogram 3.x)
 @dp.message(lambda message: message.web_app_data is not None)
 async def receive_web_app_data(message: types.Message):
+  logging.info(f"Получено сырое web_app_data: {message.web_app_data.data}")
   try:
     data = json.loads(message.web_app_data.data)
+    logging.info(f"Распарсенные данные заказа: {data}")
 
     order_id = data.get("order_id", "Не указан")
     client_name = data.get("client_name", "Клиент")
@@ -160,12 +163,15 @@ async def receive_web_app_data(message: types.Message):
         f"🕒 **Время:** {time_str}"
     )
 
+    logging.info(f"Отправляю заказ #{order_id} в группу {GROUP_ID}")
     await bot.send_message(GROUP_ID, text, parse_mode="Markdown")
+    logging.info(f"Заказ #{order_id} успешно отправлен в группу {GROUP_ID}")
+
     await message.answer(
         f"Спасибо за заказ #{order_id}! Мы уже начали его готовить."
     )
   except Exception as e:
-    logging.error(f"Ошибка обработки заказа из WebApp: {e}")
+    logging.error(f"Ошибка обработки заказа из WebApp: {e}", exc_info=True)
 
 
 # Функция запуска Telegram-бота в фоне параллельно с FastAPI
