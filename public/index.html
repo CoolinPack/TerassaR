@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Зафиксирован зум для iOS: запрещен авто-зум, но разрешено ручное приближение -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Terassa — Ресторан в Нячанге</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -81,27 +82,6 @@
             background: #faf8f5;
             outline: none;
             color: var(--text-main);
-        }
-
-        .welcome-banner {
-            background: linear-gradient(135deg, #5c2c16 0%, #7a3d20 100%);
-            color: white;
-            padding: 20px;
-            border-radius: var(--radius);
-            margin-bottom: 16px;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-        .welcome-banner h4 {
-            margin: 0 0 8px 0;
-            font-size: 18px;
-            font-weight: 800;
-        }
-        .welcome-banner p {
-            margin: 0;
-            font-size: 13px;
-            line-height: 1.4;
-            opacity: 0.95;
         }
 
         .hero-header {
@@ -184,6 +164,13 @@
             box-sizing: border-box;
             background: white;
             outline: none;
+        }
+
+        .categories-header-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            color: #1a1a1a;
         }
 
         .custom-dropdown-wrapper { position: relative; margin-bottom: 16px; }
@@ -536,13 +523,8 @@
 
     <div class="container">
 
-        <!-- ЭКРАН 1: ГЛАВНАЯ -->
+        <!-- ЭКРАН 1: ГЛАВНАЯ (приветственный текст удален) -->
         <div id="screen-home" class="screen active">
-            <div class="welcome-banner">
-                <h4>Добро пожаловать в Terassa ресторан</h4>
-                <p>Заказывайте наши восхитительные блюда и напитки не выходя из дома!</p>
-            </div>
-
             <div class="hero-header">
                 <div class="hero-content">
                     <h1>Terassa</h1>
@@ -592,6 +574,9 @@
                 <input type="text" id="searchInput" placeholder="Быстрый поиск блюд и напитков..." oninput="renderMenu()">
             </div>
 
+            <!-- Добавлена надпись категорий под поисковиком -->
+            <div class="categories-header-title">Категории блюд и напитков</div>
+
             <div class="custom-dropdown-wrapper">
                 <div class="dropdown-toggle-btn" id="dropdownToggleBtn" onclick="toggleCategoryDropdown()">
                     <span id="selectedCategoryLabel">Салаты</span>
@@ -638,7 +623,7 @@
             </div>
         </div>
 
-        <!-- ЭКРАН 4: ПРОФИЛЬ -->
+        <!-- ЭКРАН 4: ПРОФИЛЬ (Админка доступна только владельцу с ID 1393803372) -->
         <div id="screen-profile" class="screen">
             <div class="profile-card">
                 <div class="avatar-circle" id="profileInitial">А</div>
@@ -656,7 +641,7 @@
                     <span class="profile-label">Пол</span>
                     <span class="profile-val" id="valGender">Мужской</span>
                 </div>
-                <div style="margin-top: 15px; border-top: 1px solid #f0ece1; padding-top: 12px;">
+                <div id="adminPanelContainer" style="margin-top: 15px; border-top: 1px solid #f0ece1; padding-top: 12px; display: none;">
                     <button class="btn-geo" style="background:#2c3e50; color:white; border:none;" onclick="toggleAdminMode()">
                         🔑 Режим администратора: <span id="adminStatusText" style="margin-left: 4px;">ВЫКЛ</span>
                     </button>
@@ -879,6 +864,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (tg && tg.expand) tg.expand();
             
+            // Проверка Telegram ID для доступа к админке (ваш ID: 1393803372)
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const userId = tg.initDataUnsafe.user.id;
+                if (userId === 1393803372) {
+                    const adminContainer = document.getElementById('adminPanelContainer');
+                    if (adminContainer) adminContainer.style.display = 'block';
+                }
+            }
+
             // Загрузка истории заказов навсегда (из localStorage)
             const savedHistory = localStorage.getItem('terassa_order_history');
             if (savedHistory) {
@@ -1225,14 +1219,12 @@
                 time: dateStr
             };
 
-            // Отправка данных боту через Telegram WebApp API
             if (tg && tg.sendData) {
                 tg.sendData(JSON.stringify(orderPayload));
             } else {
                 console.log("Данные заказа:", orderPayload);
             }
 
-            // Сохранение в постоянную историю (localStorage)
             orderHistory.unshift({
                 id: newOrderId,
                 date: dateStr,
