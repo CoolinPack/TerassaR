@@ -136,24 +136,44 @@ async def cmd_start(message: types.Message):
 
 
 # Обработчик заказов из Mini App (aiogram 3.x)
+# Универсальный обработчик заказов из Mini App
 @dp.message(lambda message: message.web_app_data is not None)
 async def receive_web_app_data(message: types.Message):
   try:
+    # Логируем то, что реально пришло от Mini App (можно посмотреть в логах Render)
+    logging.info(f"Получены данные из WebApp: {message.web_app_data.data}")
+    
     data = json.loads(message.web_app_data.data)
 
+    # Безопасно извлекаем данные (даже если каких-то полей нет, бот не упадет с ошибкой)
+    order_id = data.get("order_id", "Не указан")
+    client_name = data.get("client_name", data.get("name", "Клиент"))
+    order_type = data.get("type", "delivery")
+    type_str = 'Доставка' if order_type == 'delivery' else 'Самовывоз'
+    address = data.get("address", "Не указан")
+    items = data.get("items", "Состав не передан")
+    total = data.get("total", 0)
+    time_str = data.get("time", "Не указано")
+    
+    # Куда отправлять: берем из JSON или используем ваш ID группы по умолчанию
+    target_group_id = int(data.get("group_id", -1004208823431))
+
     text = (
-        f"🚨 **Новый заказ #{data['order_id']}!**\n\n"
-        f"👤 **Имя:** {data['client_name']}\n"
-        f"🏷 **Тип:** {'Доставка' if data['type'] == 'delivery' else 'Самовывоз'}\n"
-        f"📍 **Адрес:** {data['address']}\n"
-        f"🛒 **Состав:** {data['items']}\n"
-        f"💰 **Итого:** {data['total']:,} VND\n"
-        f"🕒 **Время:** {data['time']}"
+        f"🚨 **Новый заказ #{order_id}!**\n\n"
+        f"👤 **Имя:** {client_name}\n"
+        f"🏷 **Тип:** {type_str}\n"
+        f"📍 **Адрес:** {address}\n"
+        f"🛒 **Состав:** {items}\n"
+        f"💰 **Итого:** {total:,} VND\n"
+        f"🕒 **Время:** {time_str}"
     )
 
-    await bot.send_message(GROUP_ID, text, parse_mode="Markdown")
+    # Отправляем в административную группу
+    await bot.send_message(target_group_id, text, parse_mode="Markdown")
+    
+    # Отвечаем пользователю в чате с ботом
     await message.answer(
-        f"Спасибо за заказ #{data['order_id']}! Мы уже начали его готовить."
+        f"Спасибо за заказ #{order_id}! Мы уже начали его готовить."
     )
   except Exception as e:
     logging.error(f"Ошибка обработки заказа из WebApp: {e}")
