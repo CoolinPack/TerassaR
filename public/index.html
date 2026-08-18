@@ -30,7 +30,6 @@
         .screen { display: none; }
         .screen.active { display: block; }
 
-        /* Модальное окно регистрации (1 раз) */
         .onboarding-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -84,7 +83,6 @@
             color: var(--text-main);
         }
 
-        /* Приветственный баннер на главной */
         .welcome-banner {
             background: linear-gradient(135deg, #5c2c16 0%, #7a3d20 100%);
             color: white;
@@ -106,7 +104,6 @@
             opacity: 0.95;
         }
 
-        /* Шапка с фоном */
         .hero-header {
             position: relative;
             border-radius: 20px;
@@ -189,7 +186,6 @@
             outline: none;
         }
 
-        /* Выпадающий список категорий */
         .custom-dropdown-wrapper { position: relative; margin-bottom: 16px; }
         .dropdown-toggle-btn {
             width: 100%;
@@ -428,7 +424,6 @@
         .status-cooking { background: #fef3c7; color: #d97706; }
         .status-ready { background: #d4efdf; color: #27ae60; }
 
-        /* Нижняя навигация */
         nav {
             position: fixed;
             bottom: 12px;
@@ -505,7 +500,6 @@
 </head>
 <body>
 
-    <!-- МОДАЛЬНОЕ ОКНО РЕГИСТРАЦИИ (1 РАЗ) -->
     <div id="onboardingModal" class="onboarding-overlay" style="display: none;">
         <div class="onboarding-content">
             <h3>Добро пожаловать в Terassa</h3>
@@ -531,7 +525,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО СТОП-ЛИСТА -->
     <div id="stopModal" class="modal-overlay" onclick="closeStopModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 style="color: #e74c3c;">Блюдо временно на стопе</h3>
@@ -545,7 +538,6 @@
 
         <!-- ЭКРАН 1: ГЛАВНАЯ -->
         <div id="screen-home" class="screen active">
-            <!-- Приветственный блок -->
             <div class="welcome-banner">
                 <h4>Добро пожаловать в Terassa ресторан</h4>
                 <p>Заказывайте наши восхитительные блюда и напитки не выходя из дома!</p>
@@ -597,7 +589,7 @@
             </div>
             
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Быстрый поиск блюд и напитков (например: тунец, кола)..." oninput="renderMenu()">
+                <input type="text" id="searchInput" placeholder="Быстрый поиск блюд и напитков..." oninput="renderMenu()">
             </div>
 
             <div class="custom-dropdown-wrapper">
@@ -685,7 +677,6 @@
         </div>
     </div>
 
-    <!-- Нижняя навигация -->
     <nav>
         <button id="nav-home" class="active" onclick="switchScreen('home')">Главная</button>
         <button id="nav-menu" onclick="switchScreen('menu')">Меню</button>
@@ -887,6 +878,13 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             if (tg && tg.expand) tg.expand();
+            
+            // Загрузка истории заказов навсегда (из localStorage)
+            const savedHistory = localStorage.getItem('terassa_order_history');
+            if (savedHistory) {
+                try { orderHistory = JSON.parse(savedHistory); } catch(e) {}
+            }
+
             checkUserRegistration();
             initCustomDropdown();
             renderMenu();
@@ -1227,12 +1225,14 @@
                 time: dateStr
             };
 
-            if (tg && tg.initData) {
+            // Отправка данных боту через Telegram WebApp API
+            if (tg && tg.sendData) {
                 tg.sendData(JSON.stringify(orderPayload));
             } else {
-                console.log("Заказ отправлен в группу -1004208823431:", orderPayload);
+                console.log("Данные заказа:", orderPayload);
             }
 
+            // Сохранение в постоянную историю (localStorage)
             orderHistory.unshift({
                 id: newOrderId,
                 date: dateStr,
@@ -1243,6 +1243,7 @@
                 type: currentOrderType,
                 address: address
             });
+            localStorage.setItem('terassa_order_history', JSON.stringify(orderHistory));
 
             alert(`Заказ #${newOrderId} успешно оформлен!`);
             cart = [];
