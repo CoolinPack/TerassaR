@@ -121,7 +121,7 @@ async def cmd_start(message: types.Message):
               types.InlineKeyboardButton(
                   text="🍽 Открыть меню Terassa",
                   web_app=types.WebAppInfo(
-                      url="https://ваш-сайт-на-render.onrender.com"
+                      url="https://terassar.onrender.com"
                   ),
               )
           ]
@@ -136,9 +136,7 @@ async def cmd_start(message: types.Message):
 
 
 # Обработчик заказов из Mini App (aiogram 3.x)
-@dp.message(
-    lambda message: message.web_app_data is not None
-)  # Проверяем, что пришли данные из WebApp
+@dp.message(lambda message: message.web_app_data is not None)
 async def receive_web_app_data(message: types.Message):
   try:
     data = json.loads(message.web_app_data.data)
@@ -168,11 +166,9 @@ async def start_telegram_bot():
 
 @app.on_event("startup")
 async def startup_event():
-  # Запускаем бота асинхронно вместе с поднятием FastAPI
   asyncio.create_task(start_telegram_bot())
 
 
 if __name__ == "__main__":
-  # Render передает свой порт через переменные окружения, локально запустится на 8000
   port = int(os.environ.get("PORT", 8000))
-  uvicorn.run("main:app", host="0.0.0.0", port=port)
+  uvicorn.run("bot:app", host="0.0.0.0", port=port)
