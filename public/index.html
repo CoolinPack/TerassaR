@@ -7,14 +7,15 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --primary: #2c3e50;
-            --accent: #e67e22;
-            --accent-gradient: linear-gradient(135deg, #f39c12, #e67e22);
-            --bg-color: #f8f9fa;
+            --primary: #5c2c16;
+            --primary-light: #7a3d20;
+            --accent: #5c2c16;
+            --accent-gradient: #5c2c16;
+            --bg-color: #f7f4ee;
             --card-bg: #ffffff;
-            --text-main: #2c3e50;
-            --text-muted: #7f8c8d;
-            --shadow: 0 8px 20px rgba(0,0,0,0.06);
+            --text-main: #1a1a1a;
+            --text-muted: #666666;
+            --shadow: 0 4px 15px rgba(0,0,0,0.04);
             --radius: 16px;
         }
 
@@ -24,202 +25,287 @@
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            padding-bottom: 85px;
+            padding-bottom: 90px;
         }
 
-        /* Шапка */
-        header {
-            background: var(--primary);
-            color: white;
-            padding: 20px 15px;
-            text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
-        header p { margin: 5px 0 0 0; font-size: 13px; opacity: 0.8; }
-
-        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .container { padding: 16px; max-width: 600px; margin: 0 auto; }
 
         /* Экраны */
         .screen { display: none; }
         .screen.active { display: block; }
 
-        /* Выпуклые табы: Акции, скидки, промокоды */
+        /* Шапка бренда / Заголовки */
+        .brand-header {
+            margin-bottom: 16px;
+        }
+        .brand-header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 800;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+        .brand-header p {
+            margin: 2px 0 0 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 16px 0 12px 0;
+            color: #1a1a1a;
+        }
+
+        /* Выпуклые табы на главной (как на скрине 3) */
         .promo-slider {
             display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 5px 2px 15px 2px;
-            scrollbar-width: none;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        .promo-slider::-webkit-scrollbar { display: none; }
-        
         .promo-card {
-            min-width: 220px;
-            background: var(--accent-gradient);
-            color: white;
-            padding: 16px;
+            flex: 1;
+            background: var(--card-bg);
+            color: var(--text-main);
+            padding: 14px 10px;
             border-radius: var(--radius);
-            box-shadow: 0 6px 15px rgba(230, 126, 34, 0.3);
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
+            box-shadow: var(--shadow);
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            border: 1px solid rgba(0,0,0,0.03);
         }
-        .promo-card h4 { margin: 0 0 5px 0; font-size: 16px; }
-        .promo-card p { margin: 0; font-size: 12px; opacity: 0.9; line-height: 1.4; }
 
-        /* Секции заголовков */
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 20px 0 12px 0;
+        /* Карточки популярных блюд */
+        .popular-list {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .popular-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
             justify-content: space-between;
+            align-items: center;
+        }
+        .popular-info h5 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: var(--text-main); }
+        .popular-info .price { font-size: 14px; color: var(--text-main); font-weight: 700; }
+        .popular-arrow {
+            font-size: 18px;
+            color: #b5835a;
         }
 
-        /* Поисковая строка */
+        /* Поисковик в меню */
         .search-box {
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
         .search-box input {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e2e8f0;
+            padding: 14px 16px;
+            border: 1px solid #e2dacd;
             border-radius: var(--radius);
             font-size: 14px;
             box-sizing: border-box;
             background: white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             outline: none;
-            transition: border-color 0.2s;
-        }
-        .search-box input:focus {
-            border-color: var(--accent);
         }
 
-        /* Горизонтальный скролл для популярных блюд */
-        .popular-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            scrollbar-width: none;
+        /* Выпадающий список категорий */
+        .category-dropdown-container {
+            margin-bottom: 16px;
+            position: relative;
         }
-        .popular-scroll::-webkit-scrollbar { display: none; }
-
-        .popular-item {
-            min-width: 140px;
-            max-width: 140px;
-            background: var(--card-bg);
+        .category-select {
+            width: 100%;
+            padding: 14px 16px;
+            background: white;
+            border: 1px solid #e2dacd;
             border-radius: var(--radius);
-            padding: 12px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .popular-item h5 { margin: 8px 0 4px 0; font-size: 13px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .popular-item .price { font-size: 13px; color: var(--accent); font-weight: bold; margin-bottom: 8px; }
-
-        /* Категории меню (табы переключения) */
-        .categories-nav {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 5px 0 15px 0;
-            margin-bottom: 10px;
-            scrollbar-width: none;
-        }
-        .categories-nav::-webkit-scrollbar { display: none; }
-        
-        .cat-btn {
-            background: #e2e8f0;
-            color: var(--text-main);
-            border: none;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 600;
+            color: var(--text-main);
+            appearance: none;
+            outline: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 18px;
             cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        .cat-btn.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2);
         }
 
-        /* Заголовки подкатегорий внутри меню */
-        .category-header {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 20px 0 10px 0;
-            padding-bottom: 4px;
-            border-bottom: 2px solid #edf2f7;
-        }
-
-        /* Карточки блюд */
+        /* Карточки блюд в меню со счетчиком */
         .menu-list { display: flex; flex-direction: column; gap: 10px; }
         .food-card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 14px;
+            padding: 14px 16px;
             box-shadow: var(--shadow);
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            justify-content: space-between;
+            align-items: center;
         }
-        .food-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .food-title { font-size: 15px; font-weight: bold; color: var(--text-main); }
-        .food-price { font-size: 15px; font-weight: bold; color: var(--accent); white-space: nowrap; }
-        .food-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+        .food-details { flex: 1; padding-right: 10px; }
+        .food-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .food-price { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
+        .food-desc { font-size: 12px; color: var(--text-muted); }
 
-        /* Кнопки */
-        .btn {
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
-            transition: opacity 0.2s;
-        }
-        .btn:active { opacity: 0.8; }
-        .btn-sm { width: auto; padding: 6px 12px; font-size: 12px; margin-top: 5px; }
-
-        /* Переключатель Самовывоз / Доставка в корзине */
-        .order-type-selector {
+        /* Контроллер количества (+ / -) */
+        .counter-controls {
             display: flex;
-            background: #e2e8f0;
+            align-items: center;
+            background: #f3efe6;
             border-radius: 12px;
             padding: 4px;
+            gap: 8px;
+        }
+        .counter-btn {
+            background: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            color: var(--text-main);
+        }
+        .counter-btn.plus {
+            background: #5c2c16;
+            color: white;
+        }
+        .counter-value {
+            font-size: 15px;
+            font-weight: 700;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        /* Корзина */
+        .cart-summary-box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            margin-top: 15px;
+        }
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #e2dacd;
+            padding-bottom: 12px;
+        }
+        
+        /* Кнопки самовывоз / доставка в корзине */
+        .order-type-selector {
+            display: flex;
+            gap: 10px;
             margin-bottom: 15px;
         }
         .order-type-btn {
             flex: 1;
-            background: transparent;
-            border: none;
-            padding: 10px;
-            font-size: 13px;
-            font-weight: bold;
-            color: var(--text-muted);
-            border-radius: 10px;
+            background: white;
+            border: 1px solid #e2dacd;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            border-radius: 12px;
             cursor: pointer;
+            text-align: center;
             transition: all 0.2s;
-            box-shadow: none;
         }
         .order-type-btn.active {
+            background: #5c2c16;
+            color: white;
+            border-color: #5c2c16;
+            box-shadow: 0 4px 10px rgba(92, 44, 22, 0.2);
+        }
+
+        .btn-main {
+            background: #5c2c16;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(92, 44, 22, 0.2);
+        }
+
+        /* Профиль */
+        .profile-card {
             background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .avatar-circle {
+            width: 70px;
+            height: 70px;
+            background: #5c2c16;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0 auto 12px auto;
+        }
+        .profile-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0ece1;
+            font-size: 14px;
+        }
+        .profile-info-row:last-child { border-bottom: none; }
+        .profile-label { color: var(--text-muted); }
+        .profile-val { font-weight: 600; }
+
+        /* История заказов */
+        .order-history-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 10px;
+        }
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+        .order-card-date { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+        .order-card-items { font-size: 13px; color: #444; }
+        .badge-new {
+            background: #eef2f7;
+            color: #3182ce;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
         }
 
         /* Нижняя навигация */
@@ -232,8 +318,8 @@
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
-            border-top: 1px solid #edf2f7;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+            border-top: 1px solid #eee;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
             z-index: 100;
         }
         nav button {
@@ -247,101 +333,101 @@
             gap: 4px;
             cursor: pointer;
             font-weight: 500;
-            transition: color 0.2s;
         }
+        nav button.active { color: #5c2c16; font-weight: bold; }
         nav button span { font-size: 18px; }
-        nav button.active { color: var(--accent); font-weight: bold; }
 
-        /* Формы профиля и доставки */
-        .input-group { margin-bottom: 12px; }
-        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e2e8f0;
+        .badge-cart-count {
+            position: absolute;
+            top: 2px;
+            right: 28%;
+            background: #e74c3c;
+            color: white;
             border-radius: 10px;
-            box-sizing: border-box;
-            font-size: 14px;
-            background: #fdfdfd;
+            padding: 1px 5px;
+            font-size: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h2>РЕСТОРАН «ТЕРРАССА» 🌿</h2>
-        <p>Итальянская и европейская кухня в Нячанге</p>
-    </header>
-
     <div class="container">
 
         <!-- ЭКРАН 1: ГЛАВНАЯ -->
         <div id="screen-home" class="screen active">
-            <!-- Выпуклые табы: Акции, скидки, промокоды -->
-            <div class="promo-slider">
-                <div class="promo-card">
-                    <h4>🔥 Скоро скидки</h4>
-                    <p>Следите за обновлениями! Скоро здесь появятся горячие скидки на любимые позиции.</p>
-                </div>
-                <div class="promo-card" style="background: linear-gradient(135deg, #2980b9, #3498db);">
-                    <h4>🎁 Промокоды</h4>
-                    <p>Скоро запустим систему промокодов на секретные позиции нашего меню.</p>
-                </div>
-                <div class="promo-card" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
-                    <h4>⭐️ Акции недели</h4>
-                    <p>Специальные предложения и подарки от шеф-повара ожидаются совсем скоро.</p>
-                </div>
+            <div class="brand-header" style="margin-top: 5px;">
+                <h1>Terassa</h1>
+                <p>Ресторан</p>
             </div>
 
-            <!-- Популярные блюда сегодня -->
-            <div class="section-title">
-                <span>🔥 Популярные блюда сегодня</span>
+            <!-- Табы сверху главной -->
+            <div class="promo-slider">
+                <div class="promo-card">Скидки</div>
+                <div class="promo-card">Акции</div>
+                <div class="promo-card">Промокод</div>
             </div>
-            <div class="popular-scroll">
-                <div class="popular-item">
-                    <div style="font-size: 32px;">🥩</div>
-                    <h5>Стейк Рибай</h5>
-                    <div class="price">450k</div>
-                    <button class="btn btn-sm" onclick="addToCart('Стейк Рибай', 450000)">В корзину</button>
+
+            <div class="section-title" style="font-size: 18px;">Популярные блюда сегодня</div>
+            <div class="popular-list">
+                <div class="popular-card" onclick="openMenuAndSelect('Тартар из тунца с авокадо')">
+                    <div class="popular-info">
+                        <h5>Тартар из тунца с авокадо</h5>
+                        <div class="price">160 000 đ</div>
+                    </div>
+                    <div class="popular-arrow">→</div>
                 </div>
-                <div class="popular-item">
-                    <div style="font-size: 32px;">🦐</div>
-                    <h5>Цезарь с креветками</h5>
-                    <div class="price">150k</div>
-                    <button class="btn btn-sm" onclick="addToCart('Цезарь с креветками', 150000)">В корзину</button>
+                <div class="popular-card" onclick="openMenuAndSelect('Цезарь с креветками')">
+                    <div class="popular-info">
+                        <h5>Цезарь с креветками</h5>
+                        <div class="price">150 000 đ</div>
+                    </div>
+                    <div class="popular-arrow">→</div>
                 </div>
-                <div class="popular-item">
-                    <div style="font-size: 32px;">🍖</div>
-                    <h5>Свиные рёбра BBQ</h5>
-                    <div class="price">250k</div>
-                    <button class="btn btn-sm" onclick="addToCart('Свиные рёбра в соусе Барбекю', 250000)">В корзину</button>
+                <div class="popular-card" onclick="openMenuAndSelect('Лосось на гриле')">
+                    <div class="popular-info">
+                        <h5>Лосось на гриле</h5>
+                        <div class="price">150 000 đ</div>
+                    </div>
+                    <div class="popular-arrow">→</div>
                 </div>
-                <div class="popular-item">
-                    <div style="font-size: 32px;">🐟</div>
-                    <h5>Тартар из тунца</h5>
-                    <div class="price">160k</div>
-                    <button class="btn btn-sm" onclick="addToCart('Тартар из тунца с авокадо', 160000)">В корзину</button>
+                <div class="popular-card" onclick="openMenuAndSelect('Жареный гребешок с креветкой под азиатским соусом')">
+                    <div class="popular-info">
+                        <h5>Жареный гребешок с креветкой под азиатским соусом</h5>
+                        <div class="price">250 000 đ</div>
+                    </div>
+                    <div class="popular-arrow">→</div>
+                </div>
+                <div class="popular-card" onclick="openMenuAndSelect('Свиные рёбра в медово-горчичном соусе')">
+                    <div class="popular-info">
+                        <h5>Свиные рёбра в медово-горчичном соусе</h5>
+                        <div class="price">250 000 đ</div>
+                    </div>
+                    <div class="popular-arrow">→</div>
                 </div>
             </div>
         </div>
 
         <!-- ЭКРАН 2: МЕНЮ -->
         <div id="screen-menu" class="screen">
-            <div class="section-title"><span>🍽 Меню ресторана</span></div>
+            <div class="brand-header">
+                <p>Меню</p>
+                <h1>Выберите блюдо</h1>
+            </div>
             
-            <!-- Поисковик по блюдам и напиткам -->
+            <!-- Поисковик -->
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 Найти блюдо или напиток..." oninput="filterMenuSearch()">
+                <input type="text" id="searchInput" placeholder="Поиск блюда или ингредиента..." oninput="renderMenu()">
             </div>
 
-            <!-- Табы категорий -->
-            <div class="categories-nav">
-                <button class="cat-btn active" onclick="switchCategory('all')">Все</button>
-                <button class="cat-btn" onclick="switchCategory('food')">🍽 Еда</button>
-                <button class="cat-btn" onclick="switchCategory('bar')">🍸 Бар и напитки</button>
+            <!-- Выпадающий список категорий -->
+            <div class="category-dropdown-container">
+                <select id="categorySelect" class="category-select" onchange="renderMenu()">
+                    <!-- Заполняется динамически -->
+                </select>
             </div>
 
-            <!-- Список товаров по категориям -->
+            <!-- Список товаров -->
             <div class="menu-list" id="menu-container">
                 <!-- Генерируется динамически -->
             </div>
@@ -349,52 +435,65 @@
 
         <!-- ЭКРАН 3: КОРЗИНА -->
         <div id="screen-cart" class="screen">
-            <div class="section-title"><span>🛒 Ваша корзина</span></div>
-            
-            <!-- Выбор типа заказа: Самовывоз или Доставка -->
-            <div class="order-type-selector">
-                <button class="order-type-btn active" id="type-pickup" onclick="setOrderType('pickup')">🚶 Самовывоз</button>
-                <button class="order-type-btn" id="type-delivery" onclick="setOrderType('delivery')">🚗 Доставка</button>
-            </div>
-
-            <!-- Поля для доставки (скрыты по умолчанию) -->
-            <div id="delivery-address-container" style="display: none; background: white; padding: 15px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 15px;">
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>Адрес доставки в Нячанге</label>
-                    <input type="text" id="deliveryAddress" placeholder="Улица, номер дома, квартира/отель">
-                </div>
+            <div class="brand-header">
+                <p>Корзина</p>
+                <h1>Ваш заказ</h1>
             </div>
 
             <div id="cart-items" style="margin-bottom: 15px;">
                 <p style="color: var(--text-muted); text-align: center; padding: 20px;">Ваша корзина пуста</p>
             </div>
 
-            <div id="cart-summary" style="display: none; background: white; padding: 15px; border-radius: var(--radius); box-shadow: var(--shadow);">
-                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 15px;">
-                    <span>Итого:</span>
-                    <span id="cart-total-price" style="color: var(--accent);">0 đ</span>
+            <div id="cart-summary-section" style="display: none;">
+                <div class="cart-summary-box">
+                    <!-- Выбор типа заказа: Самовывоз / Доставка прямо в блоке заказа -->
+                    <div style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Способ получения</div>
+                    <div class="order-type-selector">
+                        <button class="order-type-btn active" id="type-pickup" onclick="setOrderType('pickup')">Заберу с собой</button>
+                        <button class="order-type-btn" id="type-delivery" onclick="setOrderType('delivery')">Доставка</button>
+                    </div>
+
+                    <div id="delivery-address-container" style="display: none; margin-bottom: 15px;">
+                        <input type="text" id="deliveryAddress" placeholder="Адрес доставки (улица, дом, кв.)" style="width: 100%; padding: 12px; border: 1px solid #e2dacd; border-radius: 12px; box-sizing: border-box; font-size: 14px;">
+                    </div>
+
+                    <div class="cart-total-row">
+                        <span>Итого</span>
+                        <span id="cart-total-price">0 đ</span>
+                    </div>
+
+                    <button class="btn-main" onclick="checkout()">Оформить заказ</button>
                 </div>
-                <button class="btn" onclick="checkout()">Заказать</button>
             </div>
         </div>
 
         <!-- ЭКРАН 4: ПРОФИЛЬ -->
         <div id="screen-profile" class="screen">
-            <div class="section-title"><span>👤 Профиль пользователя</span></div>
-            <div style="background: white; padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow);">
-                <div class="input-group">
-                    <label>Имя</label>
-                    <input type="text" id="authName" placeholder="Ваше имя">
+            <div class="profile-card">
+                <div class="avatar-circle" id="profileInitial">А</div>
+                <h2 id="profileName" style="margin: 0 0 15px 0; font-size: 20px;">Арсен ...</h2>
+                
+                <div class="profile-info-row">
+                    <span class="profile-label">Имя</span>
+                    <span class="profile-val" id="valName">Арсен</span>
                 </div>
-                <div class="input-group">
-                    <label>Фамилия</label>
-                    <input type="text" id="authSurname" placeholder="Ваша фамилия">
+                <div class="profile-info-row">
+                    <span class="profile-label">Фамилия</span>
+                    <span class="profile-val" id="valSurname">...</span>
                 </div>
-                <div class="input-group">
-                    <label>Telegram ID (Авторизован)</label>
-                    <input type="text" id="authTgId" disabled style="background: #f1f5f9; color: #64748b;">
+                <div class="profile-info-row">
+                    <span class="profile-label">Дата рождения</span>
+                    <span class="profile-val">30.09.2002</span>
                 </div>
-                <button class="btn" onclick="alert('Данные профиля успешно сохранены!')">Сохранить</button>
+                <div class="profile-info-row">
+                    <span class="profile-label">Пол</span>
+                    <span class="profile-val">Мужской</span>
+                </div>
+            </div>
+
+            <div class="section-title" style="font-size: 18px;">История заказов</div>
+            <div id="order-history-container">
+                <!-- Динамические заказы -->
             </div>
         </div>
 
@@ -408,8 +507,9 @@
         <button id="nav-menu" onclick="switchScreen('menu')">
             <span>📖</span>Меню
         </button>
-        <button id="nav-cart" onclick="switchScreen('cart')">
+        <button id="nav-cart" onclick="switchScreen('cart')" style="position: relative;">
             <span>🛒</span>Корзина
+            <div id="cartBadge" class="badge-cart-count" style="display: none;">0</div>
         </button>
         <button id="nav-profile" onclick="switchScreen('profile')">
             <span>👤</span>Профиль
@@ -417,11 +517,10 @@
     </nav>
 
     <script>
-        // Полная структура меню ресторана с делением на Еду и Бар/Напитки
+        // Меню ресторана со всеми категориями и блюдами
         const menuSections = [
             {
-                sectionName: "🥗 Салаты",
-                type: "food",
+                sectionName: "Салаты",
                 items: [
                     { name: "Тартар из тунца с авокадо", price: 160000, desc: "Тунец, авокадо, красный лук, оливковое масло, специи." },
                     { name: "Цезарь с креветками", price: 150000, desc: "Листья салата, креветки, томаты черри, перепелиные яйца, сухарики, соус «Цезарь»." },
@@ -431,8 +530,7 @@
                 ]
             },
             {
-                sectionName: "🧀 Холодные закуски",
-                type: "food",
+                sectionName: "Холодные закуски",
                 items: [
                     { name: "Овощной ассорти", price: 70000, desc: "Свежие овощи и зелень." },
                     { name: "Сырная тарелка", price: 190000, desc: "Гауда, пармезан, дорблю." },
@@ -441,23 +539,21 @@
                 ]
             },
             {
-                sectionName: "🍲 Горячие блюда",
-                type: "food",
+                sectionName: "Горячие блюда",
                 items: [
-                    { name: "Жульен с грибами", price: 80000, desc: "Грибной жульен в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
-                    { name: "Жульен с курицей", price: 90000, desc: "Жульен с курицей в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
-                    { name: "Жульен с креветкой", price: 100000, desc: "Жульен с креветкой в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
-                    { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, черри, соус тартар, специи." },
-                    { name: "Стейк из тунца", price: 150000, desc: "Стейк тунца, спаржа, брокколи, черри, соус тартар, специи." },
-                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, бешамель, сырная шапочка." },
-                    { name: "Свинина по-французски", price: 160000, desc: "Отбивная свинина на гратене, помидор, бешамель, сырная шапочка." },
+                    { name: "Жульен с грибами", price: 80000, desc: "Состав" },
+                    { name: "Жульен с курицей", price: 90000, desc: "Состав" },
+                    { name: "Жульен с креветкой", price: 100000, desc: "Состав" },
+                    { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, черри, соус тартар." },
+                    { name: "Стейк из тунца", price: 150000, desc: "Стейк тунца, спаржа, брокколи, черри, соус тартар." },
+                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, сырная шапочка." },
+                    { name: "Свинина по-французски", price: 160000, desc: "Отбивная свинина на гратене, помидор, сырная шапочка." },
                     { name: "Отварной картофель с малосольной селедочкой", price: 180000, desc: "Картофель, сельдь, маринованный лук." },
                     { name: "Жареный гребешок с креветкой под азиатским соусом", price: 250000, desc: "Морской гребешок и креветки с азиатским соусом." }
                 ]
             },
             {
-                sectionName: "🍖 Свиные рёбра",
-                type: "food",
+                sectionName: "Свиные рёбра",
                 items: [
                     { name: "Свиные рёбра в медово-горчичном соусе", price: 250000, desc: "Томленные 6 часов, соус кетчуп, кисло-сладкий." },
                     { name: "Свиные рёбра в соусе Терияки", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски, кунжут." },
@@ -465,8 +561,7 @@
                 ]
             },
             {
-                sectionName: "🥩 Говяжьи рёбра",
-                type: "food",
+                sectionName: "Говяжьи рёбра",
                 items: [
                     { name: "Говяжьи рёбра в медово-горчичном соусе", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски, соусы." },
                     { name: "Говяжьи рёбра в соусе Терияки", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски, кунжут." },
@@ -474,28 +569,25 @@
                 ]
             },
             {
-                sectionName: "🥔 Гарниры",
-                type: "food",
+                sectionName: "Гарниры",
                 items: [
                     { name: "Картофель по-деревенски", price: 80000, desc: "Румяные картофельные дольки со специями." },
                     { name: "Картофель фри", price: 70000, desc: "Хрустящий картофель фри." },
-                    { name: "Нежное гороховое пюре", price: 80000, desc: "Домашнее гороховое пюре с кремовой текстурой." }
+                    { name: "Нежное гороховое пюре", price: 80000, desc: "Домашнее гороховое пюре." }
                 ]
             },
             {
-                sectionName: "🥟 Пельмени и вареники",
-                type: "food",
+                sectionName: "Пельмени и вареники",
                 items: [
-                    { name: "Домашние пельмени с говядиной", price: 120000, desc: "Со сметаной (в бульоне или без)." },
-                    { name: "Домашние пельмени со свининой", price: 110000, desc: "Со сметаной (в бульоне или без)." },
-                    { name: "Домашние пельмени с курицей", price: 100000, desc: "Со сметаной (в бульоне или без)." },
+                    { name: "Домашние пельмени с говядиной", price: 120000, desc: "Со сметаной." },
+                    { name: "Домашние пельмени со свининой", price: 110000, desc: "Со сметаной." },
+                    { name: "Домашние пельмени с курицей", price: 100000, desc: "Со сметаной." },
                     { name: "Домашние вареники с картофелем", price: 100000, desc: "Подаются со сметаной." },
                     { name: "Вареники с лососем, креветкой и сливочным сыром", price: 130000, desc: "Изысканные вареники с морепродуктами." }
                 ]
             },
             {
-                sectionName: "🍺 Закуски к пиву",
-                type: "food",
+                sectionName: "Закуски к пиву",
                 items: [
                     { name: "Копчёная перепёлка (2 шт.)", price: 120000, desc: "Отличный выбор к пенному." },
                     { name: "Джерки из говядины", price: 120000, desc: "Сушеное мясо говядины." },
@@ -507,39 +599,55 @@
                 ]
             },
             {
-                sectionName: "🍰 Десерты",
-                type: "food",
+                sectionName: "Десерты",
                 items: [
-                    { name: "Наполеон", price: 70000, desc: "Нежные слоёные коржи с заварным кремом." },
-                    { name: "Медовик", price: 70000, desc: "Медовые коржи с нежным сметанным кремом." },
-                    { name: "Классический чизкейк", price: 70000, desc: "Сливочный чизкейк на песочной основе." }
+                    { name: "Наполеон", price: 70000, desc: "Слоёные коржи с заварным кремом." },
+                    { name: "Медовик", price: 70000, desc: "Медовые коржи со сметанным кремом." },
+                    { name: "Классический чизкейк", price: 70000, desc: "Сливочный чизкейк." }
                 ]
             },
             {
-                sectionName: "🍸 Бар, напитки и коктейли",
-                type: "bar",
+                sectionName: "Бар и напитки",
                 items: [
                     { name: "Водка Абсолют (50 мл)", price: 60000, desc: "Крепкий алкоголь." },
                     { name: "Ром Бакарди (50 мл)", price: 80000, desc: "Качественный ром." },
                     { name: "Виски Балантайс (50 мл)", price: 80000, desc: "Шотландский виски." },
-                    { name: "Джек Дэниелс (50 мл)", price: 80000, desc: "Американский виски." },
-                    { name: "Коньяк Лезгинка (50 мл)", price: 80000, desc: "Выдержанный коньяк." },
-                    { name: "Ликер Егермейстер (50 мл)", price: 90000, desc: "Традиционный ликер." },
                     { name: "Вино красное / белое сухое (Чили, бокал 150 мл)", price: 120000, desc: "Чилийское вино." },
-                    { name: "Aperol Spritz", price: 140000, desc: "Освежающий коктейль." },
-                    { name: "Mojito", price: 140000, desc: "Мята, лайм, ром, содовая." },
-                    { name: "Pina Colada", price: 140000, desc: "Ананас, кокос, ром." },
-                    { name: "Coca Cola / Fanta / Sprite", price: 25000, desc: "Банка 0.33 л." },
-                    { name: "Минеральная вода Боржоми", price: 85000, desc: "0.5 л." },
-                    { name: "Капучино", price: 45000, desc: "Свежесваренный кофе." },
-                    { name: "Чайник черного/зеленого чая (350 мл)", price: 50000, desc: "Ароматный чай." }
+                    { name: "Aperol Spritz", price: 140000, desc: "Коктейль." },
+                    { name: "Mojito", price: 140000, desc: "Коктейль." },
+                    { name: "Coca Cola / Fanta / Sprite", price: 25000, desc: "0.33 л." },
+                    { name: "Капучино", price: 45000, desc: "Кофе." },
+                    { name: "Чайник черного/зеленого чая (350 мл)", price: 50000, desc: "Чай." }
                 ]
             }
         ];
 
         let cart = [];
-        let currentFilter = 'all'; // 'all', 'food', 'bar'
-        let currentOrderType = 'pickup'; // 'pickup', 'delivery'
+        let orderHistory = [
+            { id: 3, date: "18.08.2026, 17:02:35", total: 340000, status: "Новый", itemsStr: "Жульен с курицей × 1, Жульен с креветкой × 1, Лосось на гриле × 1" },
+            { id: 2, date: "18.08.2026, 17:00:30", total: 340000, status: "Новый", itemsStr: "Жульен с курицей × 1, Жульен с креветкой × 1, Лосось на гриле × 1" }
+        ];
+        let currentOrderType = 'pickup'; // 'pickup' или 'delivery'
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            initCategoryDropdown();
+            renderMenu();
+            renderOrderHistory();
+            updateCartBadge();
+        });
+
+        // Заполнение селекта категорий
+        function initCategoryDropdown() {
+            const select = document.getElementById('categorySelect');
+            select.innerHTML = '';
+            menuSections.forEach((section, index) => {
+                const opt = document.createElement('option');
+                opt.value = index;
+                opt.textContent = section.sectionName;
+                select.appendChild(opt);
+            });
+        }
 
         // Переключение экранов
         function switchScreen(screenName) {
@@ -549,107 +657,133 @@
             document.getElementById(`screen-${screenName}`).classList.add('active');
             document.getElementById(`nav-${screenName}`).classList.add('active');
 
-            if (screenName === 'menu') {
-                renderMenu();
-            }
             if (screenName === 'cart') {
                 renderCart();
+            }
+            if (screenName === 'profile') {
+                renderOrderHistory();
             }
             window.scrollTo(0, 0);
         }
 
-        // Переключение категорий (Все, Еда, Бар)
-        function switchCategory(type) {
-            currentFilter = type;
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function openMenuAndSelect(dishName) {
+            switchScreen('menu');
+            // Найти к какому разделу принадлежит блюдо и выбрать его
+            for (let i = 0; i < menuSections.length; i++) {
+                const found = menuSections[i].items.find(item => item.name === dishName);
+                if (found) {
+                    document.getElementById('categorySelect').value = i;
+                    break;
+                }
+            }
+            document.getElementById('searchInput').value = '';
             renderMenu();
         }
 
-        // Поиск по блюдам и напиткам
-        function filterMenuSearch() {
-            renderMenu();
-        }
-
-        // Рендеринг меню с учетом фильтров и поиска
+        // Рендеринг меню с учетом поиска и выбранной категории из выпадающего списка
         function renderMenu() {
             const container = document.getElementById('menu-container');
             const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
-            
+            const selectedCatIndex = document.getElementById('categorySelect').value;
+
             let html = '';
 
-            menuSections.forEach(section => {
-                // Фильтрация по типу категории (Еда / Бар)
-                if (currentFilter !== 'all' && section.type !== currentFilter) return;
-
-                // Фильтрация элементов по поисковому запросу
-                const filteredItems = section.items.filter(item => 
-                    item.name.toLowerCase().includes(searchQuery) || 
-                    item.desc.toLowerCase().includes(searchQuery)
-                );
-
-                if (filteredItems.length > 0) {
-                    html += `<div class="category-header">${section.sectionName}</div>`;
-                    filteredItems.forEach(item => {
-                        html += `
-                            <div class="food-card">
-                                <div class="food-header">
-                                    <span class="food-title">${item.name}</span>
-                                    <span class="food-price">${item.price.toLocaleString()} đ</span>
-                                </div>
-                                <div class="food-desc">${item.desc}</div>
-                                <button class="btn btn-sm" onclick="addToCart('${item.name}', ${item.price})">Добавить в корзину</button>
-                            </div>
-                        `;
+            // Если есть поисковый запрос, ищем по всем категориям
+            if (searchQuery !== '') {
+                menuSections.forEach(section => {
+                    section.items.forEach(item => {
+                        if (item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery)) {
+                            html += createFoodCardHtml(item);
+                        }
+                    });
+                });
+            } else {
+                // Иначе показываем выбранную категорию из селекта
+                const section = menuSections[selectedCatIndex];
+                if (section) {
+                    section.items.forEach(item => {
+                        html += createFoodCardHtml(item);
                     });
                 }
-            });
+            }
 
             if (html === '') {
-                html = `<p style="text-align: center; color: var(--text-muted); padding: 30px;">Ничего не найдено по вашему запросу.</p>`;
+                html = `<p style="text-align: center; color: var(--text-muted); padding: 30px;">Ничего не найдено.</p>`;
             }
 
             container.innerHTML = html;
         }
 
-        // Выбор типа заказа (Самовывоз / Доставка)
+        function createFoodCardHtml(item) {
+            const cartItem = cart.find(i => i.name === item.name);
+            const qty = cartItem ? cartItem.quantity : 0;
+
+            return `
+                <div class="food-card">
+                    <div class="food-details">
+                        <div class="food-title">${item.name}</div>
+                        <div class="food-price">${item.price.toLocaleString()} đ</div>
+                        <div class="food-desc">${item.desc}</div>
+                    </div>
+                    <div class="counter-controls">
+                        <button class="counter-btn" onclick="changeQuantity('${item.name}', ${item.price}, -1)">−</button>
+                        <span class="counter-value">${qty}</span>
+                        <button class="counter-btn plus" onclick="changeQuantity('${item.name}', ${item.price}, 1)">+</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Изменение количества товара (+ / -)
+        function changeQuantity(name, price, delta) {
+            const existing = cart.find(i => i.name === name);
+            if (existing) {
+                existing.quantity += delta;
+                if (existing.quantity <= 0) {
+                    cart = cart.filter(i => i.name !== name);
+                }
+            } else if (delta > 0) {
+                cart.push({ name, price, quantity: 1 });
+            }
+
+            renderMenu();
+            updateCartBadge();
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cartBadge');
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (totalCount > 0) {
+                badge.style.display = 'block';
+                badge.textContent = totalCount;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Выбор Самовывоз / Доставка в корзине
         function setOrderType(type) {
             currentOrderType = type;
             document.getElementById('type-pickup').classList.remove('active');
             document.getElementById('type-delivery').classList.remove('active');
             document.getElementById(`type-${type}`).classList.add('active');
 
-            const deliveryContainer = document.getElementById('delivery-address-container');
+            const addressContainer = document.getElementById('delivery-address-container');
             if (type === 'delivery') {
-                deliveryContainer.style.display = 'block';
+                addressContainer.style.display = 'block';
             } else {
-                deliveryContainer.style.display = 'none';
+                addressContainer.style.display = 'none';
             }
         }
 
-        // Управление корзиной
-        function addToCart(name, price) {
-            const existing = cart.find(i => i.name === name);
-            if (existing) {
-                existing.quantity += 1;
-            } else {
-                cart.push({ name, price, quantity: 1 });
-            }
-            
-            const tg = window.Telegram?.WebApp;
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('light');
-            }
-            alert(`Добавлено в корзину: ${name}`);
-        }
-
+        // Рендеринг корзины
         function renderCart() {
             const container = document.getElementById('cart-items');
-            const summary = document.getElementById('cart-summary');
+            const summarySection = document.getElementById('cart-summary-section');
 
             if (cart.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Ваша корзина пуста</p>';
-                summary.style.display = 'none';
+                summarySection.style.display = 'none';
                 return;
             }
 
@@ -658,85 +792,77 @@
                 total += item.price * item.quantity;
                 return `
                     <div class="food-card" style="margin-bottom: 10px;">
-                        <div class="food-header">
-                            <span class="food-title">${item.name}</span>
-                            <span class="food-price">${(item.price * item.quantity).toLocaleString()} đ</span>
+                        <div class="food-details">
+                            <div class="food-title">${item.name}</div>
+                            <div class="food-price">${(item.price * item.quantity).toLocaleString()} đ <span style="font-size:12px; color:var(--text-muted)">× ${item.quantity}</span></div>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-                            <span style="font-size: 13px; color: var(--text-muted);">Количество: ${item.quantity}</span>
-                            <button class="btn btn-sm" style="background: #e74c3c; width: auto;" onclick="removeFromCart(${index})">Удалить</button>
+                        <div class="counter-controls">
+                            <button class="counter-btn" onclick="updateCartItemQty(${index}, -1)">−</button>
+                            <span class="counter-value">${item.quantity}</span>
+                            <button class="counter-btn plus" onclick="updateCartItemQty(${index}, 1)">+</button>
                         </div>
                     </div>
                 `;
             }).join('');
 
             document.getElementById('cart-total-price').innerText = total.toLocaleString() + ' đ';
-            summary.style.display = 'block';
+            summarySection.style.display = 'block';
         }
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
+        function updateCartItemQty(index, delta) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
             renderCart();
+            updateCartBadge();
         }
 
+        // Оформление заказа (без каких-либо пометок про username)
         function checkout() {
-            const name = document.getElementById('authName').value || 'Гость';
-            const orderTypeName = currentOrderType === 'delivery' ? 'Доставка 🚗' : 'Самовывоз 🚶';
-            const address = currentOrderType === 'delivery' ? document.getElementById('deliveryAddress').value : 'Ресторан Terassa';
+            let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            let itemsStr = cart.map(i => `${i.name} × ${i.quantity}`).join(', ');
+            
+            const newOrderId = orderHistory.length > 0 ? orderHistory[0].id + 1 : 1;
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ru-RU') + ', ' + now.toLocaleTimeString('ru-RU');
 
-            if (currentOrderType === 'delivery' && !address.trim()) {
-                alert('Пожалуйста, укажите адрес доставки!');
+            orderHistory.unshift({
+                id: newOrderId,
+                date: dateStr,
+                total: total,
+                status: "Новый",
+                itemsStr: itemsStr
+            });
+
+            alert(`Заказ #${newOrderId} успешно оформлен!`);
+            cart = [];
+            updateCartBadge();
+            switchScreen('profile');
+        }
+
+        // Рендеринг истории заказов в профиле
+        function renderOrderHistory() {
+            const container = document.getElementById('order-history-container');
+            if (orderHistory.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">У вас пока нет заказов</p>';
                 return;
             }
 
-            alert(`Спасибо за заказ, ${name}!\nТип: ${orderTypeName}\n${currentOrderType === 'delivery' ? 'Адрес: ' + address + '\n' : ''}Заказ успешно оформлен и передан в ресторан!`);
-            cart = [];
-            switchScreen('home');
+            container.innerHTML = orderHistory.map(ord => `
+                <div class="order-history-card">
+                    <div class="order-card-header">
+                        <span>Заказ #${ord.id}</span>
+                        <span style="color: #1a1a1a;">${ord.total.toLocaleString()} đ</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <div class="order-card-date">${ord.date}</div>
+                        <span class="badge-new">${ord.status}</span>
+                    </div>
+                    <div class="order-card-items">${ord.itemsStr}</div>
+                </div>
+            `).join('');
         }
-
-        // Авторизация и Telegram WebApp интеграция
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                tg.ready();
-                tg.expand();
-
-                const tgUser = tg.initDataUnsafe?.user;
-                if (tgUser && tgUser.id) {
-                    document.getElementById('authTgId').value = tgUser.id;
-
-                    let deviceUuid = localStorage.getItem('terassa_device_uuid');
-                    if (!deviceUuid) {
-                        deviceUuid = 'dev_' + Math.random().toString(36).substring(2) + Date.now();
-                        localStorage.setItem('terassa_device_uuid', deviceUuid);
-                    }
-
-                    // Синхронизация с бэкендом (с проверкой смены аккаунта)
-                    fetch('/api/user/sync', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            telegramId: tgUser.id,
-                            username: tgUser.username || '',
-                            firstName: tgUser.first_name || '',
-                            lastName: tgUser.last_name || '',
-                            deviceUuid: deviceUuid
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data && data.firstName) {
-                            const nameInput = document.getElementById('authName');
-                            const surnameInput = document.getElementById('authSurname');
-                            if (nameInput && !nameInput.value) nameInput.value = data.firstName;
-                            if (surnameInput && !surnameInput.value && tgUser.last_name) surnameInput.value = tgUser.last_name;
-                        }
-                    })
-                    .catch(err => console.error('Ошибка синхронизации сессии:', err));
-                }
-            }
-            renderMenu();
-        });
     </script>
 </body>
 </html>
