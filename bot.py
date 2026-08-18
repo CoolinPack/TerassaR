@@ -110,8 +110,7 @@ async def sync_user(data: UserSyncSchema):
 # Инициализация Telegram Бота
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
-GROUP_ID = -1004208823431  # Ваша группа для заказов
-
+GROUP_ID = int(os.environ.get("GROUP_CHAT_ID", -1004208823431))
 
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
