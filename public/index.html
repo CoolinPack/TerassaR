@@ -46,7 +46,7 @@
         .screen { display: none; }
         .screen.active { display: block; }
 
-        /* Выпуклые современные табы (Акции, Скидки, Промокоды) */
+        /* Выпуклые табы: Акции, скидки, промокоды */
         .promo-slider {
             display: flex;
             gap: 12px;
@@ -78,6 +78,26 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+
+        /* Поисковая строка */
+        .search-box {
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            font-size: 14px;
+            box-sizing: border-box;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            border-color: var(--accent);
         }
 
         /* Горизонтальный скролл для популярных блюд */
@@ -132,6 +152,16 @@
             box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2);
         }
 
+        /* Заголовки подкатегорий внутри меню */
+        .category-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 20px 0 10px 0;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
         /* Карточки блюд */
         .menu-list { display: flex; flex-direction: column; gap: 10px; }
         .food-card {
@@ -165,6 +195,33 @@
         .btn:active { opacity: 0.8; }
         .btn-sm { width: auto; padding: 6px 12px; font-size: 12px; margin-top: 5px; }
 
+        /* Переключатель Самовывоз / Доставка в корзине */
+        .order-type-selector {
+            display: flex;
+            background: #e2e8f0;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 15px;
+        }
+        .order-type-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--text-muted);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: none;
+        }
+        .order-type-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
         /* Нижняя навигация */
         nav {
             position: fixed;
@@ -195,7 +252,7 @@
         nav button span { font-size: 18px; }
         nav button.active { color: var(--accent); font-weight: bold; }
 
-        /* Формы профиля */
+        /* Формы профиля и доставки */
         .input-group { margin-bottom: 12px; }
         .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
         .input-group input {
@@ -272,38 +329,52 @@
         <div id="screen-menu" class="screen">
             <div class="section-title"><span>🍽 Меню ресторана</span></div>
             
+            <!-- Поисковик по блюдам и напиткам -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Найти блюдо или напиток..." oninput="filterMenuSearch()">
+            </div>
+
             <!-- Табы категорий -->
             <div class="categories-nav">
-                <button class="cat-btn active" onclick="filterCategory('salads')">Салаты</button>
-                <button class="cat-btn" onclick="filterCategory('cold')">Холодные закуски</button>
-                <button class="cat-btn" onclick="filterCategory('hot')">Горячие блюда</button>
-                <button class="cat-btn" onclick="filterCategory('pork-ribs')">Свиные рёбра</button>
-                <button class="cat-btn" onclick="filterCategory('beef-ribs')">Говяжьи рёбра</button>
-                <button class="cat-btn" onclick="filterCategory('garnish')">Гарниры</button>
-                <button class="cat-btn" onclick="filterCategory('dumplings')">Пельмени и вареники</button>
-                <button class="cat-btn" onclick="filterCategory('beer-snacks')">Закуски к пиву</button>
-                <button class="cat-btn" onclick="filterCategory('desserts')">Десерты</button>
-                <button class="cat-btn" onclick="filterCategory('drinks')">Напитки и бар</button>
+                <button class="cat-btn active" onclick="switchCategory('all')">Все</button>
+                <button class="cat-btn" onclick="switchCategory('food')">🍽 Еда</button>
+                <button class="cat-btn" onclick="switchCategory('bar')">🍸 Бар и напитки</button>
             </div>
 
             <!-- Список товаров по категориям -->
             <div class="menu-list" id="menu-container">
-                <!-- Контент генерируется скриптом -->
+                <!-- Генерируется динамически -->
             </div>
         </div>
 
         <!-- ЭКРАН 3: КОРЗИНА -->
         <div id="screen-cart" class="screen">
             <div class="section-title"><span>🛒 Ваша корзина</span></div>
+            
+            <!-- Выбор типа заказа: Самовывоз или Доставка -->
+            <div class="order-type-selector">
+                <button class="order-type-btn active" id="type-pickup" onclick="setOrderType('pickup')">🚶 Самовывоз</button>
+                <button class="order-type-btn" id="type-delivery" onclick="setOrderType('delivery')">🚗 Доставка</button>
+            </div>
+
+            <!-- Поля для доставки (скрыты по умолчанию) -->
+            <div id="delivery-address-container" style="display: none; background: white; padding: 15px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 15px;">
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Адрес доставки в Нячанге</label>
+                    <input type="text" id="deliveryAddress" placeholder="Улица, номер дома, квартира/отель">
+                </div>
+            </div>
+
             <div id="cart-items" style="margin-bottom: 15px;">
                 <p style="color: var(--text-muted); text-align: center; padding: 20px;">Ваша корзина пуста</p>
             </div>
+
             <div id="cart-summary" style="display: none; background: white; padding: 15px; border-radius: var(--radius); box-shadow: var(--shadow);">
                 <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 15px;">
                     <span>Итого:</span>
                     <span id="cart-total-price" style="color: var(--accent);">0 đ</span>
                 </div>
-                <button class="btn" onclick="checkout()">Оформить заказ</button>
+                <button class="btn" onclick="checkout()">Заказать</button>
             </div>
         </div>
 
@@ -346,82 +417,129 @@
     </nav>
 
     <script>
-        // База данных блюд ресторана «Террасса»
-        const menuData = {
-            salads: [
-                { name: "Тартар из тунца с авокадо", price: 160000, desc: "Тунец, авокадо, красный лук, оливковое масло, специи." },
-                { name: "Цезарь с креветками", price: 150000, desc: "Листья салата, креветки, томаты черри, перепелиные яйца, хрустящие сухарики, фирменный соус «Цезарь»." },
-                { name: "Цезарь с курицей", price: 130000, desc: "Листья салата, куриное филе, томаты черри, перепелиные яйца, хрустящие сухарики, фирменный соус «Цезарь»." },
-                { name: "Тайский салат с креветками", price: 150000, desc: "Креветки, авокадо, манго, огурец, болгарский перец, кинза, кунжут, специи." },
-                { name: "Тёплый салат с хрустящим баклажаном", price: 120000, desc: "Хрустящий баклажан, болгарский перец, крем-чиз, кинза, кунжут, специи." }
-            ],
-            cold: [
-                { name: "Овощная ассорти", price: 70000, desc: "Свежие овощи и зелень." },
-                { name: "Сырная тарелка", price: 190000, desc: "Гауда, пармезан, дорблю." },
-                { name: "Сало с горчицей и хлебом", price: 80000, desc: "Домашнее сало с горчицей и ржаным хлебом." },
-                { name: "Закуска под рюмочку", price: 80000, desc: "Огурцы маринованные, домашнее сало, маринованные грибы." }
-            ],
-            hot: [
-                { name: "Жульен с грибами", price: 80000, desc: "Грибной жульен в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
-                { name: "Жульен с курицей", price: 90000, desc: "Жульен с курицей в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
-                { name: "Жульен с креветкой", price: 100000, desc: "Жульен с креветкой в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
-                { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, помидоры черри, соус тартар, специи." },
-                { name: "Стейк из тунца", price: 150000, desc: "Стейк тунца, спаржа, брокколи, помидоры черри, соус тартар, специи." },
-                { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, соус бешамель, сырная шапочка." },
-                { name: "Свинина по-французски", price: 160000, desc: "Отбивная свинина на картофельном гратене, помидор, соус бешамель, сырная шапочка." },
-                { name: "Отварной картофель с малосольной селедочкой", price: 180000, desc: "Картофель, сельдь, маринованный лук." },
-                { name: "Жареный гребешок с креветкой под азиатским соусом", price: 250000, desc: "Морской гребешок и сочные креветки с ароматным азиатским соусом." }
-            ],
-            "pork-ribs": [
-                { name: "Свиные рёбра в медово-горчичном соусе", price: 250000, desc: "Томленные в соусе 6 часов, соус кетчуп, кисло-сладкий." },
-                { name: "Свиные рёбра в соусе Терияки", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски, кунжут." },
-                { name: "Свиные рёбра в соусе Барбекю", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски." }
-            ],
-            "beef-ribs": [
-                { name: "Говяжьи рёбра в медово-горчичном соусе", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски, соус кетчуп и кисло-сладкий." },
-                { name: "Говяжьи рёбра в соусе Терияки", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски, соус, кунжут." },
-                { name: "Говяжьи рёбра в соусе Барбекю", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски." }
-            ],
-            garnish: [
-                { name: "Картофель по-деревенски", price: 80000, desc: "Румяные картофельные дольки со специями." },
-                { name: "Картофель фри", price: 70000, desc: "Хрустящий картофель фри." },
-                { name: "Нежное гороховое пюре", price: 80000, desc: "Домашнее гороховое пюре с кремовой текстурой." }
-            ],
-            dumplings: [
-                { name: "Домашние пельмени с говядиной", price: 120000, desc: "Подаются со сметаной (в бульоне или без)." },
-                { name: "Домашние пельмени со свининой", price: 110000, desc: "Подаются со сметаной (в бульоне или без)." },
-                { name: "Домашние пельмени с курицей", price: 100000, desc: "Подаются со сметаной (в бульоне или без)." },
-                { name: "Домашние вареники с картофелем", price: 100000, desc: "Подаются со сметаной." },
-                { name: "Вареники с лососем, креветкой и сливочным сыром", price: 130000, desc: "Изысканные вареники с морепродуктами." }
-            ],
-            "beer-snacks": [
-                { name: "Копчёная перепёлка (2 шт.)", price: 120000, desc: "Идеально к пиву." },
-                { name: "Джерки из говядины", price: 120000, desc: "Сушеное мясо говядины." },
-                { name: "Джерки из курицы", price: 100000, desc: "Сушеное куриное филе." },
-                { name: "Джерки из свинины", price: 110000, desc: "Сушеная свинина." },
-                { name: "Скумбрия холодного копчения", price: 180000, desc: "Ароматная рыба холодного копчения." },
-                { name: "Филе сибаса холодного копчения (50 г)", price: 120000, desc: "Деликатесная рыба." },
-                { name: "Мойва холодного копчения", price: 120000, desc: "Копченая мойва." }
-            ],
-            desserts: [
-                { name: "Наполеон", price: 70000, desc: "Нежные слоёные коржи с заварным кремом." },
-                { name: "Медовик", price: 70000, desc: "Медовые коржи с нежным сметанным кремом." },
-                { name: "Классический чизкейк", price: 70000, desc: "Нежный сливочный чизкейк на песочной основе." }
-            ],
-            drinks: [
-                { name: "Водка Абсолют (40 мл)", price: 60000, desc: "Крепкий алкоголь." },
-                { name: "Ром Бакарди (50 мл)", price: 80000, desc: "Качественный ром." },
-                { name: "Виски Балантайс (50 мл)", price: 80000, desc: "Шотландский виски." },
-                { name: "Вино красное / белое сухое (Чили, бокал 150 мл)", price: 120000, desc: "Чилийское вино." },
-                { name: "Aperol Spritz (Коктейль)", price: 140000, desc: "Классический освежающий коктейль." },
-                { name: "Mojito (Коктейль)", price: 140000, desc: "Мята, лайм, ром, содовая." },
-                { name: "Coca Cola / Fanta / Sprite", price: 25000, desc: "Банка 0.33 л." },
-                { name: "Капучино", price: 45000, desc: "Свежесваренный кофе." },
-                { name: "Чайник черного/зеленого чая (350 мл)", price: 50000, desc: "Ароматный чай." }
-            ]
-        };
+        // Полная структура меню ресторана с делением на Еду и Бар/Напитки
+        const menuSections = [
+            {
+                sectionName: "🥗 Салаты",
+                type: "food",
+                items: [
+                    { name: "Тартар из тунца с авокадо", price: 160000, desc: "Тунец, авокадо, красный лук, оливковое масло, специи." },
+                    { name: "Цезарь с креветками", price: 150000, desc: "Листья салата, креветки, томаты черри, перепелиные яйца, сухарики, соус «Цезарь»." },
+                    { name: "Цезарь с курицей", price: 130000, desc: "Листья салата, куриное филе, томаты черри, перепелиные яйца, сухарики, соус «Цезарь»." },
+                    { name: "Тайский салат с креветками", price: 150000, desc: "Креветки, авокадо, манго, огурец, болгарский перец, кинза, кунжут, специи." },
+                    { name: "Тёплый салат с хрустящим баклажаном", price: 120000, desc: "Хрустящий баклажан, болгарский перец, крем-чиз, кинза, кунжут, специи." }
+                ]
+            },
+            {
+                sectionName: "🧀 Холодные закуски",
+                type: "food",
+                items: [
+                    { name: "Овощной ассорти", price: 70000, desc: "Свежие овощи и зелень." },
+                    { name: "Сырная тарелка", price: 190000, desc: "Гауда, пармезан, дорблю." },
+                    { name: "Сало с горчицей и хлебом", price: 80000, desc: "Домашнее сало с горчицей и хлебом." },
+                    { name: "Закуска под рюмочку", price: 80000, desc: "Огурцы маринованные, домашнее сало, маринованные грибы." }
+                ]
+            },
+            {
+                sectionName: "🍲 Горячие блюда",
+                type: "food",
+                items: [
+                    { name: "Жульен с грибами", price: 80000, desc: "Грибной жульен в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
+                    { name: "Жульен с курицей", price: 90000, desc: "Жульен с курицей в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
+                    { name: "Жульен с креветкой", price: 100000, desc: "Жульен с креветкой в соусе бешамель, сыр моцарелла, пармезан, мускатный орех." },
+                    { name: "Лосось на гриле", price: 150000, desc: "Стейк лосося, спаржа, брокколи, черри, соус тартар, специи." },
+                    { name: "Стейк из тунца", price: 150000, desc: "Стейк тунца, спаржа, брокколи, черри, соус тартар, специи." },
+                    { name: "Курица по-французски", price: 150000, desc: "Филе бедра, помидор, картофельный гратен, бешамель, сырная шапочка." },
+                    { name: "Свинина по-французски", price: 160000, desc: "Отбивная свинина на гратене, помидор, бешамель, сырная шапочка." },
+                    { name: "Отварной картофель с малосольной селедочкой", price: 180000, desc: "Картофель, сельдь, маринованный лук." },
+                    { name: "Жареный гребешок с креветкой под азиатским соусом", price: 250000, desc: "Морской гребешок и креветки с азиатским соусом." }
+                ]
+            },
+            {
+                sectionName: "🍖 Свиные рёбра",
+                type: "food",
+                items: [
+                    { name: "Свиные рёбра в медово-горчичном соусе", price: 250000, desc: "Томленные 6 часов, соус кетчуп, кисло-сладкий." },
+                    { name: "Свиные рёбра в соусе Терияки", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски, кунжут." },
+                    { name: "Свиные рёбра в соусе Барбекю", price: 250000, desc: "Томленные 6 часов, картофель по-деревенски." }
+                ]
+            },
+            {
+                sectionName: "🥩 Говяжьи рёбра",
+                type: "food",
+                items: [
+                    { name: "Говяжьи рёбра в медово-горчичном соусе", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски, соусы." },
+                    { name: "Говяжьи рёбра в соусе Терияки", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски, кунжут." },
+                    { name: "Говяжьи рёбра в соусе Барбекю", price: 700000, desc: "Томленные 8 часов, картофель по-деревенски." }
+                ]
+            },
+            {
+                sectionName: "🥔 Гарниры",
+                type: "food",
+                items: [
+                    { name: "Картофель по-деревенски", price: 80000, desc: "Румяные картофельные дольки со специями." },
+                    { name: "Картофель фри", price: 70000, desc: "Хрустящий картофель фри." },
+                    { name: "Нежное гороховое пюре", price: 80000, desc: "Домашнее гороховое пюре с кремовой текстурой." }
+                ]
+            },
+            {
+                sectionName: "🥟 Пельмени и вареники",
+                type: "food",
+                items: [
+                    { name: "Домашние пельмени с говядиной", price: 120000, desc: "Со сметаной (в бульоне или без)." },
+                    { name: "Домашние пельмени со свининой", price: 110000, desc: "Со сметаной (в бульоне или без)." },
+                    { name: "Домашние пельмени с курицей", price: 100000, desc: "Со сметаной (в бульоне или без)." },
+                    { name: "Домашние вареники с картофелем", price: 100000, desc: "Подаются со сметаной." },
+                    { name: "Вареники с лососем, креветкой и сливочным сыром", price: 130000, desc: "Изысканные вареники с морепродуктами." }
+                ]
+            },
+            {
+                sectionName: "🍺 Закуски к пиву",
+                type: "food",
+                items: [
+                    { name: "Копчёная перепёлка (2 шт.)", price: 120000, desc: "Отличный выбор к пенному." },
+                    { name: "Джерки из говядины", price: 120000, desc: "Сушеное мясо говядины." },
+                    { name: "Джерки из курицы", price: 100000, desc: "Сушеное куриное филе." },
+                    { name: "Джерки из свинины", price: 110000, desc: "Сушеная свинина." },
+                    { name: "Скумбрия холодного копчения", price: 180000, desc: "Ароматная рыбка." },
+                    { name: "Филе сибаса холодного копчения (50 г)", price: 120000, desc: "Деликатес." },
+                    { name: "Мойва холодного копчения", price: 120000, desc: "Копченая мойва." }
+                ]
+            },
+            {
+                sectionName: "🍰 Десерты",
+                type: "food",
+                items: [
+                    { name: "Наполеон", price: 70000, desc: "Нежные слоёные коржи с заварным кремом." },
+                    { name: "Медовик", price: 70000, desc: "Медовые коржи с нежным сметанным кремом." },
+                    { name: "Классический чизкейк", price: 70000, desc: "Сливочный чизкейк на песочной основе." }
+                ]
+            },
+            {
+                sectionName: "🍸 Бар, напитки и коктейли",
+                type: "bar",
+                items: [
+                    { name: "Водка Абсолют (50 мл)", price: 60000, desc: "Крепкий алкоголь." },
+                    { name: "Ром Бакарди (50 мл)", price: 80000, desc: "Качественный ром." },
+                    { name: "Виски Балантайс (50 мл)", price: 80000, desc: "Шотландский виски." },
+                    { name: "Джек Дэниелс (50 мл)", price: 80000, desc: "Американский виски." },
+                    { name: "Коньяк Лезгинка (50 мл)", price: 80000, desc: "Выдержанный коньяк." },
+                    { name: "Ликер Егермейстер (50 мл)", price: 90000, desc: "Традиционный ликер." },
+                    { name: "Вино красное / белое сухое (Чили, бокал 150 мл)", price: 120000, desc: "Чилийское вино." },
+                    { name: "Aperol Spritz", price: 140000, desc: "Освежающий коктейль." },
+                    { name: "Mojito", price: 140000, desc: "Мята, лайм, ром, содовая." },
+                    { name: "Pina Colada", price: 140000, desc: "Ананас, кокос, ром." },
+                    { name: "Coca Cola / Fanta / Sprite", price: 25000, desc: "Банка 0.33 л." },
+                    { name: "Минеральная вода Боржоми", price: 85000, desc: "0.5 л." },
+                    { name: "Капучино", price: 45000, desc: "Свежесваренный кофе." },
+                    { name: "Чайник черного/зеленого чая (350 мл)", price: 50000, desc: "Ароматный чай." }
+                ]
+            }
+        ];
 
         let cart = [];
+        let currentFilter = 'all'; // 'all', 'food', 'bar'
+        let currentOrderType = 'pickup'; // 'pickup', 'delivery'
 
         // Переключение экранов
         function switchScreen(screenName) {
@@ -432,7 +550,7 @@
             document.getElementById(`nav-${screenName}`).classList.add('active');
 
             if (screenName === 'menu') {
-                filterCategory('salads');
+                renderMenu();
             }
             if (screenName === 'cart') {
                 renderCart();
@@ -440,25 +558,73 @@
             window.scrollTo(0, 0);
         }
 
-        // Рендеринг меню по категориям
-        function filterCategory(categoryKey) {
-            // Подсветка кнопок категорий
+        // Переключение категорий (Все, Еда, Бар)
+        function switchCategory(type) {
+            currentFilter = type;
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            event && event.target.classList.add('active');
+            event.target.classList.add('active');
+            renderMenu();
+        }
 
+        // Поиск по блюдам и напиткам
+        function filterMenuSearch() {
+            renderMenu();
+        }
+
+        // Рендеринг меню с учетом фильтров и поиска
+        function renderMenu() {
             const container = document.getElementById('menu-container');
-            const items = menuData[categoryKey] || [];
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            let html = '';
 
-            container.innerHTML = items.map(item => `
-                <div class="food-card">
-                    <div class="food-header">
-                        <span class="food-title">${item.name}</span>
-                        <span class="food-price">${item.price.toLocaleString()} đ</span>
-                    </div>
-                    <div class="food-desc">${item.desc}</div>
-                    <button class="btn btn-sm" onclick="addToCart('${item.name}', ${item.price})">Добавить в корзину</button>
-                </div>
-            `).join('');
+            menuSections.forEach(section => {
+                // Фильтрация по типу категории (Еда / Бар)
+                if (currentFilter !== 'all' && section.type !== currentFilter) return;
+
+                // Фильтрация элементов по поисковому запросу
+                const filteredItems = section.items.filter(item => 
+                    item.name.toLowerCase().includes(searchQuery) || 
+                    item.desc.toLowerCase().includes(searchQuery)
+                );
+
+                if (filteredItems.length > 0) {
+                    html += `<div class="category-header">${section.sectionName}</div>`;
+                    filteredItems.forEach(item => {
+                        html += `
+                            <div class="food-card">
+                                <div class="food-header">
+                                    <span class="food-title">${item.name}</span>
+                                    <span class="food-price">${item.price.toLocaleString()} đ</span>
+                                </div>
+                                <div class="food-desc">${item.desc}</div>
+                                <button class="btn btn-sm" onclick="addToCart('${item.name}', ${item.price})">Добавить в корзину</button>
+                            </div>
+                        `;
+                    });
+                }
+            });
+
+            if (html === '') {
+                html = `<p style="text-align: center; color: var(--text-muted); padding: 30px;">Ничего не найдено по вашему запросу.</p>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Выбор типа заказа (Самовывоз / Доставка)
+        function setOrderType(type) {
+            currentOrderType = type;
+            document.getElementById('type-pickup').classList.remove('active');
+            document.getElementById('type-delivery').classList.remove('active');
+            document.getElementById(`type-${type}`).classList.add('active');
+
+            const deliveryContainer = document.getElementById('delivery-address-container');
+            if (type === 'delivery') {
+                deliveryContainer.style.display = 'block';
+            } else {
+                deliveryContainer.style.display = 'none';
+            }
         }
 
         // Управление корзиной
@@ -469,7 +635,7 @@
             } else {
                 cart.push({ name, price, quantity: 1 });
             }
-            // Визуальный отклик
+            
             const tg = window.Telegram?.WebApp;
             if (tg && tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('light');
@@ -514,7 +680,16 @@
         }
 
         function checkout() {
-            alert('Спасибо за заказ! Заказ успешно оформлен и передан в ресторан.');
+            const name = document.getElementById('authName').value || 'Гость';
+            const orderTypeName = currentOrderType === 'delivery' ? 'Доставка 🚗' : 'Самовывоз 🚶';
+            const address = currentOrderType === 'delivery' ? document.getElementById('deliveryAddress').value : 'Ресторан Terassa';
+
+            if (currentOrderType === 'delivery' && !address.trim()) {
+                alert('Пожалуйста, укажите адрес доставки!');
+                return;
+            }
+
+            alert(`Спасибо за заказ, ${name}!\nТип: ${orderTypeName}\n${currentOrderType === 'delivery' ? 'Адрес: ' + address + '\n' : ''}Заказ успешно оформлен и передан в ресторан!`);
             cart = [];
             switchScreen('home');
         }
@@ -560,6 +735,7 @@
                     .catch(err => console.error('Ошибка синхронизации сессии:', err));
                 }
             }
+            renderMenu();
         });
     </script>
 </body>
