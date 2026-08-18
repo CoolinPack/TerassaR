@@ -5,6 +5,7 @@ import os
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from html import escape
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from aiogram import Bot, Dispatcher, types
@@ -39,6 +40,18 @@ class UserSyncSchema(BaseModel):
   firstName: str = ""
   lastName: str = ""
   deviceUuid: str
+
+
+class OrderSchema(BaseModel):
+  order_id: int
+  user_id: str | int = "Гость"
+  username: str = "не указан"
+  client_name: str = "Клиент"
+  type: str = "delivery"
+  address: str = "Не указан"
+  total: int | float = 0
+  items: str = "Состав не передан"
+  time: str = "Не указано"
 
 
 @app.post("/api/user/sync")
@@ -107,6 +120,67 @@ async def sync_user(data: UserSyncSchema):
     conn.close()
 
 
+@app.post("/api/orders")
+async def create_order(data: OrderSchema):
+  """Принимает заказ напрямую от Mini App и отправляет его в Telegram-группу."""
+  logging.info(
+      "Получен заказ через API: #%s, user_id=%s, username=%s",
+      data.order_id, data.user_id, data.username
+  )
+
+  order_type = data.type if data.type in ("delivery", "pickup") else "delivery"
+  type_str = "Доставка" if order_type == "delivery" else "Самовывоз"
+
+  # Экранируем пользовательские данные, чтобы спецсимволы
+  # в имени/адресе/составе не ломали форматирование Telegram.
+  client_name = escape(str(data.client_name))
+  username = escape(str(data.username))
+  address = escape(str(data.address))
+  items = escape(str(data.items))
+  time_str = escape(str(data.time))
+  user_id = escape(str(data.user_id))
+
+  try:
+    total = float(data.total)
+    total_str = f"{total:,.0f}" if total.is_integer() else f"{total:,.2f}"
+  except (TypeError, ValueError):
+    total_str = "0"
+
+  text = (
+      f"🚨 <b>Новый заказ #{data.order_id}</b>\n\n"
+      f"👤 <b>Имя:</b> {client_name}\n"
+      f"🔹 <b>Username:</b> @{username.lstrip('@')}\n"
+      f"🆔 <b>Telegram ID:</b> <code>{user_id}</code>\n"
+      f"🏷 <b>Тип:</b> {type_str}\n"
+      f"📍 <b>Адрес:</b> {address}\n"
+      f"🛒 <b>Состав:</b> {items}\n"
+      f"💰 <b>Итого:</b> {total_str} VND\n"
+      f"🕒 <b>Время:</b> {time_str}"
+  )
+
+  try:
+    logging.info(
+        "Отправляю API-заказ #%s в группу %s",
+        data.order_id, GROUP_ID
+    )
+    await bot.send_message(GROUP_ID, text, parse_mode="HTML")
+    logging.info(
+        "API-заказ #%s успешно отправлен в группу %s",
+        data.order_id, GROUP_ID
+    )
+    return {"success": True, "order_id": data.order_id}
+  except Exception as e:
+    logging.error(
+        "Ошибка отправки API-заказа #%s в группу %s: %s",
+        data.order_id, GROUP_ID, e, exc_info=True
+    )
+    raise HTTPException(
+        status_code=502,
+        detail="Не удалось отправить заказ в Telegram"
+    )
+
+
+
 # Инициализация Telegram Бота
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -139,32 +213,33 @@ async def cmd_start(message: types.Message):
 # Обработчик заказов из Mini App (aiogram 3.x)
 @dp.message(lambda message: message.web_app_data is not None)
 async def receive_web_app_data(message: types.Message):
+  """Оставлен для совместимости со старыми запусками Mini App через sendData()."""
   logging.info(f"Получено сырое web_app_data: {message.web_app_data.data}")
   try:
     data = json.loads(message.web_app_data.data)
     logging.info(f"Распарсенные данные заказа: {data}")
 
     order_id = data.get("order_id", "Не указан")
-    client_name = data.get("client_name", "Клиент")
+    client_name = escape(str(data.get("client_name", "Клиент")))
     order_type = data.get("type", "delivery")
-    type_str = 'Доставка' if order_type == 'delivery' else 'Самовывоз'
-    address = data.get("address", "Не указан")
-    items = data.get("items", "Состав не передан")
+    type_str = "Доставка" if order_type == "delivery" else "Самовывоз"
+    address = escape(str(data.get("address", "Не указан")))
+    items = escape(str(data.get("items", "Состав не передан")))
     total = data.get("total", 0)
-    time_str = data.get("time", "Не указано")
+    time_str = escape(str(data.get("time", "Не указано")))
 
     text = (
-        f"🚨 **Новый заказ #{order_id}**\n\n"
-        f"👤 **Имя:** {client_name}\n"
-        f"🏷 **Тип:** {type_str}\n"
-        f"📍 **Адрес:** {address}\n"
-        f"🛒 **Состав:** {items}\n"
-        f"💰 **Итого:** {total:,} VND\n"
-        f"🕒 **Время:** {time_str}"
+        f"🚨 <b>Новый заказ #{order_id}</b>\n\n"
+        f"👤 <b>Имя:</b> {client_name}\n"
+        f"🏷 <b>Тип:</b> {type_str}\n"
+        f"📍 <b>Адрес:</b> {address}\n"
+        f"🛒 <b>Состав:</b> {items}\n"
+        f"💰 <b>Итого:</b> {total:,} VND\n"
+        f"🕒 <b>Время:</b> {time_str}"
     )
 
-    logging.info(f"Отправляю заказ #{order_id} в группу {GROUP_ID}")
-    await bot.send_message(GROUP_ID, text, parse_mode="Markdown")
+    logging.info(f"Отправляю legacy-заказ #{order_id} в группу {GROUP_ID}")
+    await bot.send_message(GROUP_ID, text, parse_mode="HTML")
     logging.info(f"Заказ #{order_id} успешно отправлен в группу {GROUP_ID}")
 
     await message.answer(
@@ -172,6 +247,8 @@ async def receive_web_app_data(message: types.Message):
     )
   except Exception as e:
     logging.error(f"Ошибка обработки заказа из WebApp: {e}", exc_info=True)
+
+
 
 
 # Функция запуска Telegram-бота в фоне параллельно с FastAPI
