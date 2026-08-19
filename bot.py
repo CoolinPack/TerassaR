@@ -1,9 +1,10 @@
-import asyncio
 import json
 import logging
 import os
+import secrets
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from html import escape
 from fastapi.staticfiles import StaticFiles
@@ -13,12 +14,34 @@ from aiogram.filters import CommandStart
 from config import BOT_TOKEN, GROUP_CHAT_ID
 import database as db
 
-# Настройка логирования
 logging.basicConfig(level=logging.INFO)
 
-app = FastAPI()
+BASE_URL = os.environ.get("BASE_URL", "https://terassar.onrender.com")
+WEBHOOK_PATH = f"/webhook/{BOT_TOKEN.split(':')[0]}"
+WEBHOOK_URL = f"{BASE_URL}{WEBHOOK_PATH}"
+WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET") or secrets.token_hex(16)
 
-# Подключаем статические файлы фронтенда
+bot = Bot(token=BOT_TOKEN)
+dp = Dispatcher()
+
+logging.info(f"GROUP_CHAT_ID установлен: {GROUP_CHAT_ID}")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+  await bot.set_webhook(
+      url=WEBHOOK_URL,
+      secret_token=WEBHOOK_SECRET,
+      drop_pending_updates=True,
+  )
+  logging.info(f"Webhook установлен: {WEBHOOK_URL}")
+  yield
+  await bot.delete_webhook()
+  logging.info("Webhook снят при остановке сервиса")
+
+
+app = FastAPI(lifespan=lifespan)
+
 app.mount("/static", StaticFiles(directory="public"), name="static")
 
 
@@ -27,13 +50,24 @@ def serve_index():
   return FileResponse("public/index.html")
 
 
-# Эндпоинт для предотвращения засыпания на Render (Anti-Sleep)
 @app.get("/ping")
 def ping_server():
   return {"status": "alive"}
 
 
-# Pydantic модель для синхронизации пользователя из WebApp
+@app.post(WEBHOOK_PATH)
+async def telegram_webhook(request: Request):
+  secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
+  if secret != WEBHOOK_SECRET:
+    logging.warning("Webhook: неверный секретный токен")
+    raise HTTPException(status_code=403, detail="Forbidden")
+
+  data = await request.json()
+  update = types.Update.model_validate(data, context={"bot": bot})
+  await dp.feed_update(bot, update)
+  return {"ok": True}
+
+
 class UserSyncSchema(BaseModel):
   telegramId: int
   username: str = ""
@@ -131,8 +165,6 @@ async def create_order(data: OrderSchema):
   order_type = data.type if data.type in ("delivery", "pickup") else "delivery"
   type_str = "Доставка" if order_type == "delivery" else "Самовывоз"
 
-  # Экранируем пользовательские данные, чтобы спецсимволы
-  # в имени/адресе/составе не ломали форматирование Telegram.
   client_name = escape(str(data.client_name))
   username = escape(str(data.username))
   address = escape(str(data.address))
@@ -180,13 +212,6 @@ async def create_order(data: OrderSchema):
     )
 
 
-# Инициализация Telegram Бота
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher()
-
-logging.info(f"GROUP_CHAT_ID установлен: {GROUP_CHAT_ID}")
-
-
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
   keyboard = types.InlineKeyboardMarkup(
@@ -194,9 +219,7 @@ async def cmd_start(message: types.Message):
           [
               types.InlineKeyboardButton(
                   text="🍽 Открыть меню Terassa",
-                  web_app=types.WebAppInfo(
-                      url="https://terassar.onrender.com"
-                  ),
+                  web_app=types.WebAppInfo(url=BASE_URL),
               )
           ]
       ]
@@ -207,7 +230,6 @@ async def cmd_start(message: types.Message):
   )
 
 
-# Обработчик заказов из Mini App (aiogram 3.x)
 @dp.message(lambda message: message.web_app_data is not None)
 async def receive_web_app_data(message: types.Message):
   """Оставлен для совместимости со старыми запусками Mini App через sendData()."""
@@ -244,16 +266,6 @@ async def receive_web_app_data(message: types.Message):
     )
   except Exception as e:
     logging.error(f"Ошибка обработки заказа из WebApp: {e}", exc_info=True)
-
-
-# Функция запуска Telegram-бота в фоне параллельно с FastAPI
-async def start_telegram_bot():
-  await dp.start_polling(bot)
-
-
-@app.on_event("startup")
-async def startup_event():
-  asyncio.create_task(start_telegram_bot())
 
 
 if __name__ == "__main__":
