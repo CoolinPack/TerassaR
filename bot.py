@@ -29,15 +29,22 @@ logging.info(f"GROUP_CHAT_ID установлен: {GROUP_CHAT_ID}")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-  await bot.set_webhook(
-      url=WEBHOOK_URL,
-      secret_token=WEBHOOK_SECRET,
-      drop_pending_updates=True,
-  )
-  logging.info(f"Webhook установлен: {WEBHOOK_URL}")
+  try:
+    result = await bot.set_webhook(
+        url=WEBHOOK_URL,
+        secret_token=WEBHOOK_SECRET,
+        drop_pending_updates=True,
+    )
+    logging.info(f"set_webhook вернул: {result}, URL: {WEBHOOK_URL}")
+  except Exception as e:
+    logging.error(f"Ошибка установки webhook: {e}", exc_info=True)
   yield
-  await bot.delete_webhook()
-  logging.info("Webhook снят при остановке сервиса")
+  # ВАЖНО: не удаляем вебхук при остановке. На Render во время деплоя
+  # старый и новый инстансы недолго работают параллельно — если старый
+  # при своей остановке удалит вебхук, он снесёт вебхук уже
+  # установленный новым инстансом. Вебхук просто перезапишется новым
+  # set_webhook при следующем старте.
+  logging.info("Сервис останавливается (webhook НЕ удаляется намеренно)")
 
 
 app = FastAPI(lifespan=lifespan)
